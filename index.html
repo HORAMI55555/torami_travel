@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#d5eee8">
+  <meta name="description" content="TORAMI TRAVEL — 世界のまだ見ぬ景色に、会いにいこう。旅を地図で探し、都市を発見し、次の旅先をガチャで選ぶ旅のジャーナル。">
+  <meta property="og:type" content="website"><meta property="og:title" content="TORAMI TRAVEL | The World is Yours">
+  <meta property="og:description" content="Collect the world, one journey at a time."><meta property="og:image" content="assets/images/torami-pearl-wordmark.webp">
+  <title>TORAMI TRAVEL · The World is Yours</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="stylesheet" href="assets/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500&display=swap" rel="stylesheet">
+  <script src="data/destinations.js" defer></script><script src="data/world.js" defer></script><script src="assets/js/app.js" defer></script>
+</head>
+<body data-page="home">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="site-wrap">
+    <header class="site-header glass-panel">
+      <a class="brand-mark" href="index.html" aria-label="TORAMI TRAVEL home"><span class="brand-star">✧</span> TORAMI <small>TRAVEL</small></a>
+      <button id="menuToggle" class="icon-btn mobile-menu" type="button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+      <nav id="siteNav" class="site-nav" aria-label="Main navigation">
+        <a href="#world-map" data-i18n="navExplore">Explore</a><a href="#destinations" data-i18n="navDestinations">Destinations</a>
+        <a href="gacha.html" data-i18n="navGacha">Travel Gacha</a><a href="journeys.html" data-i18n="navJournal">My Journeys</a>
+        <a id="instagramNav" href="#connect" data-i18n="navInstagram">Instagram</a>
+        <button type="button" class="lang-btn glass-button" id="langToggle" aria-label="Switch language">EN <span>↗</span></button>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero" aria-labelledby="heroTitle">
+        <span class="floating-glint glint-a" aria-hidden="true">✦</span><span class="floating-glint glint-b" aria-hidden="true">✧</span>
+        <img class="hero-deco orb-left" src="assets/images/crystal-orb.webp" alt="" aria-hidden="true">
+        <img class="hero-deco orb-right" src="assets/images/crystal-orb.webp" alt="" aria-hidden="true">
+        <p class="eyebrow hero-eyebrow" data-i18n="heroEyebrow">A JOURNAL OF PLACES & POSSIBILITIES</p>
+        <div class="hero-wordmark"><img src="assets/images/torami-pearl-wordmark.webp" width="1450" height="500" alt="TORAMI"><span>— T R A V E L —</span></div>
+        <h1 id="heroTitle" data-i18n="heroTitle">The World is Yours.</h1>
+        <p class="hero-sub" data-i18n="heroSubtitle">Collect the world, one journey at a time.</p>
+        <div class="hero-rule"><span></span>✧<span></span></div>
+        <p class="hero-japanese" data-i18n="heroJapanese">世界のまだ見ぬ景色に、会いにいこう。</p>
+        <a class="glass-button hero-cta" href="#world-map"><span data-i18n="heroCta">Explore the world</span><span aria-hidden="true">↗</span></a>
+      </section>
+      <section class="world-section" id="world-map" aria-labelledby="mapHeading">
+        <div class="section-kicker"><span>01 / ATLAS</span><span data-i18n="atlasLabel">YOUR WORLD, REIMAGINED</span></div>
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="mapEyebrow">THE TRAVEL ATLAS</p><h2 id="mapHeading" data-i18n="mapTitle">A world worth discovering.</h2></div><p class="section-aside" data-i18n="mapAside">Choose a lens. Discover somewhere new.</p></div>
+        <div class="map-frame glass-panel">
+          <div class="map-toolbar"><div class="map-tabs" id="mapModes" role="group" aria-label="Map styles">
+            <button type="button" class="glass-button active" data-mode="visited" aria-pressed="true" data-i18n="mapVisited">My Travels</button>
+            <button type="button" class="glass-button" data-mode="all" aria-pressed="false" data-i18n="mapAll">All Countries</button>
+            <button type="button" class="glass-button" data-mode="coast" aria-pressed="false" data-i18n="mapCoast">Coastal Escapes</button>
+            <button type="button" class="glass-button" data-mode="nature" aria-pressed="false" data-i18n="mapNature">Nature</button>
+            <button type="button" class="glass-button" data-mode="culture" aria-pressed="false" data-i18n="mapCulture">Culture</button>
+          </div><div class="map-zoom"><button type="button" id="zoomIn" aria-label="Zoom in">+</button><button type="button" id="zoomOut" aria-label="Zoom out">−</button><button type="button" id="zoomReset" aria-label="Reset zoom">⌂</button></div></div>
+          <div class="map-area"><svg id="worldMap" viewBox="0 0 1100 445" role="img" aria-label="Interactive world countries map with clickable destinations"><defs><linearGradient id="visitedGem" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#baf6eb"/><stop offset=".43" stop-color="#56c4b4"/><stop offset="1" stop-color="#168a85"/></linearGradient><linearGradient id="mapOther" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f0fbf8"/><stop offset="1" stop-color="#c5e1dc"/></linearGradient></defs><g id="countriesLayer"></g><g id="microMarkers"></g></svg><div id="mapTooltip" class="map-tooltip" role="status" aria-live="polite" hidden></div></div>
+          <div class="map-bottom"><div class="map-legend"><span><i class="legend-dot visited-dot"></i><span data-i18n="mapLegendVisited">Visited · draft</span></span><span><i class="legend-dot unvisited-dot"></i><span data-i18n="mapLegendOther">Explore</span></span></div><p class="map-fineprint" data-i18n="mapFootnote">Map colors are a preview based on your screenshot; verify the list before publishing.</p></div>
+        </div>
+        <div class="atlas-bottom"><div class="stat-panel glass-panel"><div class="stat-number">35<span class="stat-plus"> + 2</span></div><div class="stat-explain"><span data-i18n="statTravelled">COUNTRIES / REGIONS</span><small data-i18n="statSource">From your November 2026 travel map</small></div><span class="stat-ornament">✧</span></div>
+          <div class="discovery-search glass-panel"><label class="search-caption" for="destinationSearch" data-i18n="searchCaption">WHERE TO NEXT?</label><div class="search-row"><span aria-hidden="true">⌕</span><input id="destinationSearch" type="search" autocomplete="off" aria-autocomplete="list" aria-controls="searchResults" placeholder="Search a country or city…"><button id="searchButton" type="button" aria-label="Search">↗</button></div><div id="searchResults" class="search-results" role="listbox" hidden></div></div></div>
+        <div class="map-selection glass-panel" id="mapSelection"><div><p class="eyebrow" data-i18n="selectedEyebrow">COUNTRY SPOTLIGHT</p><h3 id="selectedName">Choose a country on the map</h3><p id="selectedDescription" data-i18n="selectedDescription">Click a country to discover its travel guide or explore new ideas.</p></div><a id="selectedLink" class="glass-button" href="destination.html?country=greece"><span data-i18n="viewGuide">View guide</span> ↗</a></div>
+      </section>
+      <section class="destination-section" id="destinations" aria-labelledby="destinationHeading"><div class="section-kicker"><span>02 / DESTINATIONS</span><span data-i18n="destinationLabel">CURATED INSPIRATION</span></div><div class="section-heading"><div><p class="eyebrow" data-i18n="destinationEyebrow">THE DESTINATION EDIT</p><h2 id="destinationHeading" data-i18n="destinationTitle">Places that stay with you.</h2></div><p class="section-aside" data-i18n="destinationAside">A few beautiful places to begin. More stories coming soon.</p></div><div class="destination-grid" id="featuredGrid"></div><p class="editorial-note" data-i18n="editorialNote">Featured guides are inspiration samples, not published first-hand trip reviews.</p></section>
+      <section class="gacha-feature" id="gacha-feature" aria-labelledby="gachaTitle"><div class="gacha-art" aria-hidden="true"><div class="gacha-orbit orbit-one"></div><div class="gacha-orbit orbit-two"></div><img src="assets/images/crystal-orb.webp" alt=""><span>✦</span></div><div class="gacha-feature-copy"><p class="eyebrow">03 / THE WANDERER'S PICK</p><h2 id="gachaTitle" data-i18n="gachaTitle">Leave a little room for wonder.</h2><p data-i18n="gachaDescription">Can't decide where to go next? Let a little magic choose a country and a city for you.</p><a class="glass-button large" href="gacha.html"><span data-i18n="gachaAction">Try the Travel Gacha</span> <span aria-hidden="true">↗</span></a></div></section>
+      <section class="journal-section" id="journal"><div class="section-kicker"><span>04 / MY JOURNEY</span><span>PERSONAL TRAVEL JOURNAL</span></div><div class="journal-card glass-panel"><div><p class="eyebrow" data-i18n="journalEyebrow">A COLLECTION OF MOMENTS</p><h2 data-i18n="journalTitle">Not just places. Stories.</h2><p data-i18n="journalText">A space for personal photographs, beautiful discoveries, and honest notes collected along the way. Your first travel stories will live here.</p><a href="journeys.html" class="text-link"><span data-i18n="journalLink">See my travel journal</span> ↗</a></div><div class="journal-emblem"><img src="assets/images/crystal-chest.webp" alt="" loading="lazy"><span>Memories, beautifully kept.</span></div></div></section>
+      <section class="connect-section" id="connect"><span>✧</span><p class="eyebrow">STAY CURIOUS</p><h2 data-i18n="footerInvitation">Every destination begins with a dream.</h2><p data-i18n="connectCopy">Follow along as TORAMI TRAVEL grows from places into stories.</p><a class="glass-button" id="instagramCTA" href="#connect"><span data-i18n="instagramSoon">Instagram coming soon</span> ↗</a></section>
+    </main>
+    <footer class="footer"><div><span class="footer-logo">TORAMI <small>TRAVEL</small></span><p>Collect the world, one journey at a time.</p></div><div class="footer-links"><a href="#world-map">Atlas</a><a href="gacha.html">Travel Gacha</a><a href="journeys.html">Journal</a><a href="https://www.anzen.mofa.go.jp/" target="_blank" rel="noopener noreferrer" data-i18n="safetyExternal">Official travel advisories ↗</a></div><p class="copyright">© <span class="current-year">2026</span> TORAMI TRAVEL · Made with wonder ✧</p></footer>
+  </div>
+</body></html>
