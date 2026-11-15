@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#d5eee8" name="theme-color"/>
+<meta content="TORAMI TRAVEL — 世界のまだ見ぬ景色に、会いにいこう。旅を地図で探し、都市を発見し、次の旅先をガチャで選ぶ旅のジャーナル。" name="description"/>
+<meta content="website" property="og:type"/><meta content="TORAMI TRAVEL | The World is Yours" property="og:title"/>
+<meta content="Collect the world, one journey at a time." property="og:description"/><meta content="assets/images/torami-pearl-wordmark.webp" property="og:image"/>
+<title>World Atlas · TORAMI TRAVEL</title>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/><link href="assets/css/style.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Noto+Serif+JP:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<script defer="" src="data/destinations.js"></script><script defer="" src="data/world.js"></script><script defer="" src="data/country-ja.js"></script><script defer="" src="assets/js/app.js"></script>
+<!-- TORAMI GoatCounter: replace YOUR_TORAMI_CODE after creating a separate site -->
+<script async="" data-goatcounter="https://torami-travel.goatcounter.com/count" src="https://gc.zgo.at/count.js"></script>
+</head>
+<body data-page="atlas">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="site-wrap">
+<header class="site-header glass-panel">
+<a aria-label="TORAMI TRAVEL home" class="brand-mark" href="index.html"><span class="brand-star">✧</span> TORAMI <small>TRAVEL</small></a>
+<button aria-expanded="false" aria-label="Toggle menu" class="icon-btn mobile-menu" id="menuToggle" type="button">☰</button>
+<nav aria-label="Main navigation" class="site-nav" id="siteNav">
+<a aria-current="page" data-i18n="navExplore" href="atlas.html">Explore</a><a data-i18n="navDestinations" href="index.html#destinations">Destinations</a>
+<a data-i18n="navGacha" href="gacha.html">Travel Gacha</a><a data-i18n="navJournal" href="journeys.html">My Journeys</a>
+<a data-i18n="navInstagram" href="https://www.instagram.com/findmeoutthere25/" id="instagramNav" rel="noopener noreferrer" target="_blank">Instagram</a>
+<button aria-label="Switch language" class="lang-btn glass-button" id="langToggle" type="button">EN <span>↗</span></button>
+</nav>
+</header>
+<main id="main"><section class="atlas-intro"><p class="eyebrow">THE CRYSTAL ATLAS</p><h1 data-i18n="atlasHero">世界を、宝石の地図で旅する。</h1><p data-i18n="atlasIntro">国を選んで、次の旅先を見つけよう。</p></section><section aria-labelledby="mapHeading" class="world-section" id="world-map">
+<div class="section-kicker"><span>01 / ATLAS</span><span data-i18n="atlasLabel">YOUR WORLD, REIMAGINED</span></div>
+<div class="section-heading"><div><p class="eyebrow" data-i18n="mapEyebrow">THE TRAVEL ATLAS</p><h2 data-i18n="mapTitle" id="mapHeading">A world worth discovering.</h2></div><p class="section-aside" data-i18n="mapAside">Choose a lens. Discover somewhere new.</p></div>
+<div class="map-frame glass-panel">
+<div class="map-toolbar"><div aria-label="Map styles" class="map-tabs" id="mapModes" role="group">
+<button aria-pressed="true" class="glass-button active" data-i18n="mapVisited" data-mode="visited" type="button">My Travels</button>
+<button aria-pressed="false" class="glass-button" data-i18n="mapAll" data-mode="all" type="button">All Countries</button>
+<button aria-pressed="false" class="glass-button" data-i18n="mapCoast" data-mode="coast" type="button">Coastal Escapes</button>
+<button aria-pressed="false" class="glass-button" data-i18n="mapNature" data-mode="nature" type="button">Nature</button>
+<button aria-pressed="false" class="glass-button" data-i18n="mapCulture" data-mode="culture" type="button">Culture</button>
+</div><div class="map-zoom"><button aria-label="Zoom in" id="zoomIn" type="button">+</button><button aria-label="Zoom out" id="zoomOut" type="button">−</button><button aria-label="Reset zoom" id="zoomReset" type="button">⌂</button></div></div>
+<div class="map-area"><svg aria-label="Interactive world countries map with clickable destinations" id="worldMap" role="img" viewbox="0 0 1100 445"><defs><lineargradient id="visitedGem" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#baf6eb"></stop><stop offset=".43" stop-color="#56c4b4"></stop><stop offset="1" stop-color="#168a85"></stop></lineargradient><lineargradient id="mapOther" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f0fbf8"></stop><stop offset="1" stop-color="#c5e1dc"></stop></lineargradient></defs><g id="countriesLayer"></g><g id="microMarkers"></g></svg><div aria-live="polite" class="map-tooltip" hidden="" id="mapTooltip" role="status"></div></div>
+<div class="map-bottom"><div class="map-legend"><span><i class="legend-dot visited-dot"></i><span data-i18n="mapLegendVisited">Visited · draft</span></span><span><i class="legend-dot unvisited-dot"></i><span data-i18n="mapLegendOther">Explore</span></span></div><p class="map-fineprint" data-i18n="mapFootnote">Map colors are a preview based on your screenshot; verify the list before publishing.</p></div>
+</div>
+<div class="atlas-bottom"><div class="stat-panel glass-panel"><div class="stat-number">35</div><div class="stat-explain"><span data-i18n="statTravelled">COUNTRIES / REGIONS</span><small data-i18n="statSource">From your November 2026 travel map</small></div><span class="stat-ornament">✧</span></div>
+<div class="discovery-search glass-panel"><label class="search-caption" data-i18n="searchCaption" for="destinationSearch">WHERE TO NEXT?</label><div class="search-row"><span aria-hidden="true">⌕</span><input aria-autocomplete="list" aria-controls="searchResults" autocomplete="off" id="destinationSearch" placeholder="Search a country or city…" type="search"/><button aria-label="Search" id="searchButton" type="button">↗</button></div><div class="search-results" hidden="" id="searchResults" role="listbox"></div></div></div>
+<div class="map-selection glass-panel" id="mapSelection"><div><p class="eyebrow" data-i18n="selectedEyebrow">COUNTRY SPOTLIGHT</p><h3 id="selectedName">Choose a country on the map</h3><p data-i18n="selectedDescription" id="selectedDescription">Click a country to discover its travel guide or explore new ideas.</p></div><a class="glass-button" href="destination.html?country=greece" id="selectedLink"><span data-i18n="viewGuide">View guide</span> ↗</a></div>
+</section></main>
+<footer class="footer"><div><span class="footer-logo">TORAMI <small>TRAVEL</small></span><p>Collect the world, one journey at a time.</p></div><div class="footer-links"><a href="#world-map">Atlas</a><a href="gacha.html">Travel Gacha</a><a href="journeys.html">Journal</a><a data-i18n="safetyExternal" href="https://www.anzen.mofa.go.jp/" rel="noopener noreferrer" target="_blank">Official travel advisories ↗</a></div><p class="copyright">© <span class="current-year">2026</span> TORAMI TRAVEL · Made with wonder ✧</p><a class="footer-instagram" href="https://www.instagram.com/findmeoutthere25/" rel="noopener noreferrer" target="_blank">Instagram ↗</a></footer>
+</div>
+</body></html>

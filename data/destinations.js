@@ -11,7 +11,7 @@ window.TORAMI_DATA = {
   regionCountFromScreenshot: 2,
   mapSourceDate: '2026-11',
   visitedListVerified: false,
-  instagramUrl: '', // Paste your real TORAMI Instagram link once the username is decided.
+  instagramUrl: 'https://www.instagram.com/findmeoutthere25/',
   visitedCountryNames: [
     'United States of America','Mexico','United Kingdom','France','Spain',
     'Portugal','Germany','Netherlands','Belgium','Switzerland','Austria',
