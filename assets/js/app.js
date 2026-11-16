@@ -1,55 +1,244 @@
-/* TORAMI analytics: only records interactions when the GoatCounter script is configured. */
-function trackToramiEvent(path,title){try{if(window.goatcounter&&typeof window.goatcounter.count==='function'){window.goatcounter.count({path:'torami-'+path,title:title||path,event:true})}}catch(e){}}
-/* TORAMI TRAVEL · self-contained static application.
- * No accounts, external APIs, trackers or server-side build step are required.
- * The map comes from the bundled Natural Earth boundaries, not a live safety feed.
- */
-(()=>{'use strict';
-const D=window.TORAMI_DATA||{guides:[],visitedCountryNames:[],instagramUrl:''};
-const WORLD=window.TORAMI_WORLD||{features:[]};
-const $=id=>document.getElementById(id);
-const q=(selector,context=document)=>context.querySelector(selector);
-const qa=(selector,context=document)=>Array.from(context.querySelectorAll(selector));
-const imagePath=name=>(window.TORAMI_PREVIEW_IMAGES&&window.TORAMI_PREVIEW_IMAGES[name])||('assets/images/'+name);
-const safe=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const unaccent=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9\u3040-\u30ff\u3400-\u9fff ]/g,'');
-let language='ja';try{language=localStorage.getItem('torami-lang')==='en'?'en':'ja'}catch(e){language='ja'}
-const I18N={
- ja:{quickMap:'世界地図',quickMapDesc:'宝石の地図から旅先を発見',quickPlaces:'旅先ガイド',quickPlacesDesc:'世界の美しい場所を探す',quickGacha:'旅ガチャ',quickGachaDesc:'次の目的地を運命に任せて',atlasHero:'世界を、宝石の地図で旅する。',atlasIntro:'国を選んで、次の旅先を見つけよう。',navExplore:'世界地図',navDestinations:'旅先を探す',navGacha:'旅ガチャ',navJournal:'旅の記録',navInstagram:'Instagram',heroEyebrow:'A JOURNAL OF PLACES & POSSIBILITIES',heroTitle:'The World is Yours.',heroSubtitle:'Collect the world, one journey at a time.',heroJapanese:'世界のまだ見ぬ景色に、会いにいこう。',heroCta:'世界地図を探検する',atlasLabel:'世界を、もっと美しく。',mapEyebrow:'THE TRAVEL ATLAS',mapTitle:'世界が、次の物語になる。',mapAside:'地図をタップして、次の旅先を見つけよう。',mapVisited:'訪れた国',mapAll:'世界の国々',mapCoast:'海・リゾート',mapNature:'自然',mapCulture:'文化・街並み',mapLegendVisited:'訪問国（暫定）',mapLegendOther:'これからの旅先',mapFootnote:'訪問国の色分けは添付画像からの仮登録です。公開前に国名リストを確認してください。',statTravelled:'訪れた国（35ヶ国）',statSource:'2026年11月の旅行マップより',searchCaption:'WHERE TO NEXT? / 次はどこへ？',searchPlaceholder:'国名・都市名から探す…',selectedEyebrow:'COUNTRY SPOTLIGHT',selectedDescription:'地図の国を選ぶと、旅先のガイドやアイデアを見ることができます。',chooseMap:'地図から国を選んでみよう',viewGuide:'ガイドを見る',visitedDraft:'訪問国（暫定）',unvisited:'未訪問・未確認',destinationLabel:'旅先のインスピレーション',destinationEyebrow:'THE DESTINATION EDIT',destinationTitle:'心に残る、世界の景色。',destinationAside:'まずは魅力的な旅先から。旅の記録はこれから追加します。',editorialNote:'掲載中のガイドはサンプルです。本人が訪れたという体験談・レビューではありません。',gachaTitle:'偶然から、次の旅が始まる。',gachaDescription:'行きたい場所が決まらない夜には、旅ガチャ。まずは国を、次に都市を選ぶ、小さな発見の時間。',gachaAction:'旅ガチャを回してみる',journalEyebrow:'A COLLECTION OF MOMENTS',journalTitle:'旅先だけでなく、物語を。',journalText:'写真や小さな発見、そして自分だけの旅の記録。これから訪問先ごとの思い出を丁寧に集めていく場所です。',journalLink:'旅の記録へ',footerInvitation:'次の旅は、ひとつの憧れから。',connectCopy:'TORAMI TRAVELの旅の物語は、ここから始まります。',instagramSoon:'Instagramを見る',safetyExternal:'外務省 海外安全情報 ↗',backToWorld:'世界地図に戻る',cityListLabel:'PLACES TO EXPLORE',cityListTitle:'訪れてみたい都市',travelNotesLabel:'THE PERSONAL NOTEBOOK',travelNotesTitle:'旅のメモ',travelNotesBody:'本人によるレビュー・費用・写真はまだ登録されていません。現在はサイトのデザインと動作を確認するための仮ページです。',advisoryText:'治安・危険情報は地域や時期で変わります。渡航前に必ず公的な最新情報を確認してください。',tryAnotherPlace:'旅ガチャで別の場所を探す ↗',gachaPageTitle:'次は、世界のどこへ？',gachaPageIntro:'国を選んで、その国の都市を開く。今日の小さな運命の旅先を、ガチャで決めてみよう。',gachaChoose:'旅の気分を選ぶ',gachaStageOne:'STEP 1 · 国',gachaStageTwo:'STEP 2 · 都市',gachaDrawCountry:'国をひく ✧',gachaDrawCity:'都市をひく ✧',gachaReadGuide:'旅先ガイドを読む',gachaDisclaimer:'旅ガチャの候補は仮の旅行先データです。実際の渡航履歴とは区別しています。',gachaDrawing:'旅先を探しています…',gachaNoMatch:'この条件に合う旅先はまだありません。別の条件を選んでください。',gachaCountryDone:'国が決まった！次は都市を選んでみよう。',gachaCityDone:'次の旅先が決まったよ！',journeysTitle:'旅の数だけ、物語がある。',journeysIntro:'35ヶ国の記録からはじまる旅のジャーナル。訪問国マップはまず仮登録し、写真と体験談を少しずつ追加していきます。',journalCount:'35ヶ国を訪問 · 地図の色分けは暫定',journeyListTitle:'訪問先のノート',journeyCaveat:'訪問国リストは画像から読み取った暫定データです。実際の渡航先に合わせて修正してから公開してください。',inspiration:'旅のアイデア',noReview:'レビューは準備中',photoCredit:'イメージ・参考デザイン'},
- en:{quickMap:'World Atlas',quickMapDesc:'Explore our crystal world map',quickPlaces:'Destinations',quickPlacesDesc:'Discover beautiful places',quickGacha:'Travel Gacha',quickGachaDesc:'Let chance choose your next trip',atlasHero:'The world, cut like a jewel.',atlasIntro:'Select a country and discover somewhere new.',navExplore:'Explore',navDestinations:'Destinations',navGacha:'Travel Gacha',navJournal:'My Journeys',navInstagram:'Instagram',heroEyebrow:'A JOURNAL OF PLACES & POSSIBILITIES',heroTitle:'The World is Yours.',heroSubtitle:'Collect the world, one journey at a time.',heroJapanese:'The beauty of the world is waiting for you.',heroCta:'Explore the world',atlasLabel:'YOUR WORLD, REIMAGINED',mapEyebrow:'THE TRAVEL ATLAS',mapTitle:'A world worth discovering.',mapAside:'Choose a lens. Discover somewhere new.',mapVisited:'My Travels',mapAll:'All Countries',mapCoast:'Coastal Escapes',mapNature:'Nature',mapCulture:'Culture',mapLegendVisited:'Visited · draft',mapLegendOther:'Explore',mapFootnote:'Visited-country highlights are a provisional transcription of your screenshot. Verify the list before publishing.',statTravelled:'COUNTRIES VISITED',statSource:'From the November 2026 travel map',searchCaption:'WHERE TO NEXT?',searchPlaceholder:'Search a country or city…',selectedEyebrow:'COUNTRY SPOTLIGHT',selectedDescription:'Click a country to discover its travel guide or explore new ideas.',chooseMap:'Choose a country on the map',viewGuide:'View guide',visitedDraft:'Visited · provisional',unvisited:'To discover / unverified',destinationLabel:'CURATED INSPIRATION',destinationEyebrow:'THE DESTINATION EDIT',destinationTitle:'Places that stay with you.',destinationAside:'Beautiful places to begin. Personal stories coming soon.',editorialNote:'The featured guides are sample inspiration, not claims of personal travel or first-hand reviews.',gachaTitle:'Leave a little room for wonder.',gachaDescription:'Can’t decide where to go next? Let a little magic choose a country and a city for you.',gachaAction:'Try the Travel Gacha',journalEyebrow:'A COLLECTION OF MOMENTS',journalTitle:'Not just places. Stories.',journalText:'A space for personal photographs, beautiful discoveries and honest notes collected along the way. First-hand stories will be added here.',journalLink:'See my travel journal',footerInvitation:'Every destination begins with a dream.',connectCopy:'Follow along as TORAMI TRAVEL grows from places into stories.',instagramSoon:'Follow on Instagram',safetyExternal:'Official travel advisories ↗',backToWorld:'Back to the atlas',cityListLabel:'PLACES TO EXPLORE',cityListTitle:'Cities & escapes',travelNotesLabel:'THE PERSONAL NOTEBOOK',travelNotesTitle:'Notes from the journey',travelNotesBody:'First-hand reviews, trip budgets and original photos have not been added yet. This page is a design preview, not an account of a trip taken.',advisoryText:'Travel advisories vary by region and change over time. Always check current official guidance before departure.',tryAnotherPlace:'Let the gacha pick another place ↗',gachaPageTitle:'Where will the world take you?',gachaPageIntro:'First, discover a country. Then, open a city. Every great journey begins somewhere.',gachaChoose:'CHOOSE YOUR MOOD',gachaStageOne:'STEP 1 · COUNTRY',gachaStageTwo:'STEP 2 · CITY',gachaDrawCountry:'Reveal a country ✧',gachaDrawCity:'Reveal a city ✧',gachaReadGuide:'Explore the destination guide',gachaDisclaimer:'The gacha chooses from an editorial starter set, not a verified record of places personally visited.',gachaDrawing:'Finding your next destination…',gachaNoMatch:'No suggestions in this category yet. Try a different one.',gachaCountryDone:'Your country is revealed. Now choose a city!',gachaCityDone:'Your new destination awaits!',journeysTitle:'Every place leaves something behind.',journeysIntro:'A personal archive of places, photographs and moments. The travel map is a draft; stories will be added one by one.',journalCount:'35 countries visited · map highlights provisional',journeyListTitle:'Destination notebook',journeyCaveat:'Highlights are a provisional reading of the screenshot. Please correct the country list before publication.',inspiration:'Travel inspiration',noReview:'Personal notes coming soon',photoCredit:'Concept image'}
+
+(()=>{
+"use strict";
+const db=window.TORAMI_DATA||{posts:[],countries:[],visitedConfirmed:[]};
+const C=new Map(db.countries.map(c=>[c.iso,c]));
+const posts=db.posts;
+const IG="https://www.instagram.com/findmeoutthere25";
+const regions={"Europe":["ヨーロッパ","Europe"],"Asia":["アジア","Asia"],"North America":["北アメリカ","North America"],"South America":["南アメリカ","South America"],"Africa":["アフリカ","Africa"],"Oceania":["オセアニア","Oceania"]};
+const dict={
+nav_home:["ホーム","Home"],nav_atlas:["世界地図","World Atlas"],nav_destinations:["国・都市","Destinations"],nav_destination:["旅先ガイド","Guide"],nav_themes:["旅のテーマ","Travel Themes"],nav_rankings:["ランキング","The Picks"],nav_gacha:["旅ガチャ","Travel Gacha"],nav_diary:["旅日記","Travel Diary"],nav_about:["About","About"],
+footer_tag:["世界のまだ見ぬ景色に、会いにいこう。","Discover the world beyond the map."],
+map_eyebrow:["CRYSTAL WORLD ATLAS","CRYSTAL WORLD ATLAS"],tap_map:["国をタップして旅を始めよう","Tap a country to begin your journey"],
+search_placeholder:["国・都市・スポットを検索…","Search countries, cities or places…"],
+countries_count:["ヶ国","countries"],regions_count:["地域","regions"],
+see_journeys:["旅の記録を見る ↗","Explore my journeys ↗"],latest_stories:["旅のフォトストーリー","Travel photo stories"],
+view_all:["すべて見る ↗","View all ↗"],gacha_teaser:["次の旅先は、クリスタルの中に。","Your next destination awaits inside a crystal."],
+gacha_teaser_body:["国を引いて、都市を引く。偶然から始まる新しい旅。","Draw a country, then a city. Let chance lead the way."],spin_gacha:["旅ガチャを回す ✧","Spin the travel gacha ✧"],
+atlas_title:["世界は、ひとつの宝石箱。","The world is a treasure chest."],atlas_desc:["世界地図の国を選んで、まだ知らない景色に出会おう。","Choose a country and discover a world of wonders."],
+mode_visits:["訪問した国","My journeys"],mode_all:["すべての国","All countries"],mode_photos:["写真のある国","With photos"],
+atlas_note:["地図上の訪問国の色分けは、Instagram投稿から確認できた国を先行表示しています。35ヶ国すべての確定リストは後日反映します。","Highlighted countries currently reflect locations confirmed from Instagram posts. The complete list of 35 visited countries will be updated."],
+countries_photo_title:["写真でたどる旅先","Destinations in photos"],
+dest_title:["世界の景色を探す。","Find your next destination."],dest_desc:["国からも、都市からも。あなたの次の旅の入口。","Discover places by country or city."],
+filter_all:["すべて","All"],region_europe:["ヨーロッパ","Europe"],region_asia:["アジア","Asia"],region_northamerica:["北アメリカ","North America"],region_africa:["アフリカ","Africa"],region_oceania:["オセアニア","Oceania"],
+photos_only:["投稿写真のある国だけ表示","Show countries with travel photos only"],
+theme_title:["今の気分で、旅を選ぶ。","Choose a journey to match your mood."],theme_desc:["海、街並み、自然、非日常。気になる世界へ。","The coast, beautiful cities, nature and extraordinary escapes."],
+ranking_title:["心を奪われる、旅の景色。","Places that stay with you."],ranking_desc:["Instagramの旅写真から選んだフォトセレクション。個人的な順位はこれから公開予定。","A photo edit drawn from real Instagram journeys. Personal rankings are coming soon."],
+ranking_future:["本音ランキング、近日公開。","Personal rankings, coming soon."],ranking_future_desc:["訪問した35ヶ国から「もう一度行きたい国」「絶景」「コスパ」など、実体験に基づく順位を追加する予定です。","Based on 35 countries visited, future rankings will cover favorite returns, views and value, grounded in first-hand experience."],
+gacha_title:["運命の旅先を引いてみよう。","Let fate choose your next trip."],gacha_desc:["まず国を、次に都市を。世界のどこかで、あなたを待つ景色へ。","First a country, then a city. Discover a destination chosen just for you."],gacha_prompt:["次の冒険は、どこから？","Where will your next adventure begin?"],gacha_filter:["旅する地域","Choose a region"],gacha_pending:["クリスタルに運命を尋ねてみて。","Ask the crystal where to go next."],draw_country:["✧ 国を引く","✧ Draw a country"],draw_city:["✧ 都市を引く","✧ Draw a city"],save_share:["結果を画像で保存","Save result as an image"],again:["もう一度","Start again"],
+diary_title:["旅の記憶を、宝石のように。","Collect memories like precious gems."],diary_desc:["Instagramに残した実際の旅写真を、場所ごとに集めたアルバム。","An album of actual travel photos shared on Instagram, gathered by location."],diary_select:["国を選ぶ","Choose a country"],
+about_intro:["世界35ヶ国、そして2つの地域。旅で出会った景色や記憶を、一粒ずつ宝石のように集めて。","35 countries and two regions explored. Collecting the landscapes and memories from each journey like precious jewels."],about_body:["ここは、まだ知らない世界に出会うための小さな旅の宝箱。写真を眺めたり、地図を開いたり、ガチャを回したり。次の旅がもっと楽しみになる場所を目指しています。","A little treasure chest for discovering places you've never seen. Explore photos, open the map and spin a travel gacha to find your next adventure."],
+tap_country:["国を選ぶ","Choose a country"],see_details:["この国を見る ↗","Explore this country ↗"],photos_verified:["Instagram投稿の写真","Photos from Instagram posts"],no_photos:["写真は準備中","Photos coming soon"],region_text:["地域","Region"],city_text:["都市・スポット","Cities & places"],gallery_text:["旅の写真","Travel gallery"],places_text:["訪れた場所の記録","Places in the album"],unverified:["詳しい旅行情報・体験談はこれから追加予定。","Detailed travel information and first-hand notes will be added."],
+all_destinations:["すべての旅先","All destinations"],count_label:["件の旅先","destinations"],post_label:["件の記録","posts"],
+selected_country:["選択した国","Selected country"],no_photo_note:["この国の投稿写真はまだ登録されていません。","No Instagram photos are registered for this country yet."],
+country_drew:["運命の国","Your country"],city_drew:["次の街","Your city"],travel_guide:["旅先を見る ↗","View destination ↗"],show_more:["もっと見る","See more"],
+theme_coast:["きらめく海","Crystal coasts"],theme_nature:["大自然","Nature & wonder"],theme_cities:["美しい街並み","Beautiful cities"],theme_culture:["文化と物語","Culture & stories"],theme_escape:["特別な旅","Extraordinary escapes"],theme_hidden:["まだ知らない発見","Hidden gems"],
+theme_coast_sub:["光と海を探す旅","For turquoise seas and golden light"],theme_nature_sub:["心がほどける壮大な景色","Mountains, forests and northern lights"],theme_cities_sub:["街を歩くと絵になる旅","Wander through remarkable streets"],theme_culture_sub:["歴史や風景に出会う","History, heritage and discovery"],theme_escape_sub:["少しだけ贅沢な時間","A little extra sparkle"],theme_hidden_sub:["旅先で見つけた小さな宝物","Unforgettable places off the usual path"],
+ranking_photo:["PHOTO EDIT · Instagramから","PHOTO EDIT · From Instagram"],
 };
-const t=(key)=> (I18N[language]||I18N.en)[key]||key;
-const countryLabel=name=>language==='ja'?(window.TORAMI_COUNTRY_JA?.[name]||name):name;
-const langName=g=>language==='ja'?(g.ja||countryLabel(g.name)):g.name;
-const continentOf=name=>{const f=WORLD.features.find(x=>x.properties.name===name);return f?f.properties.continent:''};
-function lookupGuide(value){const v=unaccent(value);return D.guides.find(g=>unaccent(g.name)===v||unaccent(g.ja)===v||unaccent(g.key)===v)}
-function guideLink(g){return 'destination.html?country='+encodeURIComponent(g?g.key:'greece')}
-function renderLanguage(){document.documentElement.lang=language;qa('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;if(I18N[language]?.[key])el.textContent=t(key)});const b=$('langToggle');if(b)b.innerHTML=language==='ja'?'EN <span>↗</span>':'JP <span>↗</span>';const search=$('destinationSearch');if(search)search.placeholder=t('searchPlaceholder');if(document.body.dataset.page==='home'){renderFeatured()}if(document.body.dataset.page==='atlas'){updateSelection(currentSelection);renderMapColors();qa('#countriesLayer path').forEach(p=>{p.setAttribute('aria-label',countryLabel(p.dataset.name));const title=p.querySelector('title');if(title)title.textContent=countryLabel(p.dataset.name)});if($('destinationSearch')?.value)$('destinationSearch').dispatchEvent(new Event('input'))}if(document.body.dataset.page==='destination')renderGuide();if(document.body.dataset.page==='journeys')renderJourneys();if(document.body.dataset.page==='gacha'){renderGachaSelection();const labels=language==='ja'?['すべての旅先','訪問国（暫定）','まだ行っていない国','海・リゾート','自然','予算重視','ヨーロッパ','アジア']:['All destinations','Visited (provisional)','Not yet visited','Coastal escapes','Nature','Budget-friendly','Europe','Asia'];qa('#gachaMode option').forEach((o,i)=>o.textContent=labels[i])}}
-function setupHeader(){const b=$('langToggle');b?.addEventListener('click',()=>{language=language==='ja'?'en':'ja';trackToramiEvent('language-'+language,'Language switched');try{localStorage.setItem('torami-lang',language)}catch(e){}renderLanguage()});const menu=$('menuToggle'),nav=$('siteNav');menu?.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open))});qa('.site-nav a').forEach(a=>a.addEventListener('click',()=>{nav?.classList.remove('open');menu?.setAttribute('aria-expanded','false')}));qa('.current-year').forEach(n=>n.textContent=String(new Date().getFullYear()));if(D.instagramUrl && /^https:\/\/www\.instagram\.com\//.test(D.instagramUrl)){['instagramNav','instagramCTA'].forEach(id=>{const link=$(id);if(link){link.href=D.instagramUrl;link.target='_blank';link.rel='noopener noreferrer';if(id==='instagramCTA')link.firstElementChild.textContent='Instagram ↗'}})}}
-function makeCard(g){const cover=g.photo?`<img src="${imagePath(g.photo)}" alt="${safe(g.name)} travel inspiration" loading="eager">`:'';return `<article class="destination-card ${g.photo?'':'no-photo'}">${cover}<div class="photo-shade"></div><div class="card-top"><span>${safe(language==='ja'?(g.tagJa||g.tag):g.tag)}</span><span>✧ ${safe(t('inspiration'))}</span></div><div class="card-content"><h3>${safe(langName(g))}</h3><p>${safe(language==='ja'?(g.descJa||g.desc):g.desc)}</p></div><span class="card-arrow" aria-hidden="true">↗</span><a href="${guideLink(g)}" aria-label="${safe(langName(g))} — ${safe(t('viewGuide'))}"></a></article>`}
-function renderFeatured(){const grid=$('featuredGrid');if(!grid)return;grid.innerHTML=D.guides.slice(0,6).map(makeCard).join('')}
-// Map: bundled GeoJSON makes this work in file:// previews as well as on GitHub Pages.
-const visited=new Set(D.visitedCountryNames||[]);let currentMode='visited',currentSelection=null,mapZoom=1;
-const xLon=lon=>(lon+180)/360*1100, yLat=lat=>(84-lat)/145*445;
-function polygonPath(feature){const geo=feature.geometry;if(!geo)return'';const groups=geo.type==='Polygon'?[geo.coordinates]:geo.coordinates;let result='';for(const polygon of groups){for(const ring of polygon){if(!ring||ring.length<3)continue;result+='M'+ring.map(p=>`${xLon(p[0]).toFixed(1)},${yLat(p[1]).toFixed(1)}`).join('L')+'Z'}}return result}
-function guideByMapName(name){return lookupGuide(name)}
-function renderMap(){const layer=$('countriesLayer');if(!layer)return;const ns='http://www.w3.org/2000/svg';const frag=document.createDocumentFragment();for(const f of WORLD.features){const p=document.createElementNS(ns,'path'),name=f.properties.name;p.setAttribute('d',polygonPath(f));p.dataset.name=name;p.setAttribute('tabindex','0');p.setAttribute('role','button');p.setAttribute('aria-label',countryLabel(name));p.setAttribute('fill-rule','evenodd');p.addEventListener('click',()=>setCountry(name));p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setCountry(name)}});p.addEventListener('mouseenter',()=>showTooltip(name));p.addEventListener('mouseleave',()=>hideTooltip());p.addEventListener('focus',()=>showTooltip(name));p.addEventListener('blur',()=>hideTooltip());const title=document.createElementNS(ns,'title');title.textContent=countryLabel(name);p.appendChild(title);frag.appendChild(p)}layer.appendChild(frag);const mark=$('microMarkers');for(const loc of [{name:'Maldives',lon:73.2,lat:3.2},{name:'Singapore',lon:103.8,lat:1.35}]){const g=document.createElementNS(ns,'circle');g.setAttribute('cx',xLon(loc.lon));g.setAttribute('cy',yLat(loc.lat));g.setAttribute('r',3.5);g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label',loc.name);g.addEventListener('click',()=>setCountry(loc.name));g.addEventListener('keydown',e=>{if(e.key==='Enter')setCountry(loc.name)});mark.appendChild(g)}renderMapColors();qa('[data-mode]',$('mapModes')).forEach(btn=>btn.addEventListener('click',()=>{currentMode=btn.dataset.mode;trackToramiEvent('map-filter-'+currentMode,'Map theme filter');qa('[data-mode]',$('mapModes')).forEach(b=>{b.classList.toggle('active',b===btn);b.setAttribute('aria-pressed',String(b===btn))});renderMapColors()}));$('zoomIn')?.addEventListener('click',()=>setZoom(mapZoom+0.25));$('zoomOut')?.addEventListener('click',()=>setZoom(mapZoom-0.25));$('zoomReset')?.addEventListener('click',()=>setZoom(1));updateSelection(null)}
-function renderMapColors(){const highlightedNames=new Set(D.guides.filter(g=>g.type.includes(currentMode)).map(g=>g.name));qa('#countriesLayer path').forEach(p=>{const name=p.dataset.name;const on=visited.has(name);p.classList.toggle('visited',currentMode==='visited'&&on);p.classList.toggle('highlighted',currentMode!=='visited'&&currentMode!=='all'&&highlightedNames.has(name));p.classList.toggle('deemphasized',(currentMode==='visited'&&!on)||(currentMode!=='visited'&&currentMode!=='all'&&!highlightedNames.has(name)));p.classList.toggle('selected',name===currentSelection)})}
-function setZoom(n){mapZoom=Math.max(1,Math.min(2.5,n));const svg=$('worldMap');const w=1100/mapZoom,h=445/mapZoom;svg.setAttribute('viewBox',`${(1100-w)/2} ${(445-h)/2} ${w} ${h}`)}
-function showTooltip(name){const el=$('mapTooltip');if(!el)return;const g=guideByMapName(name);const label=g?langName(g):countryLabel(name);el.innerHTML=`<strong>${safe(label)}</strong><small>${visited.has(name)?safe(t('visitedDraft')):safe(t('unvisited'))}</small>`;el.hidden=false}
-function hideTooltip(){if($('mapTooltip'))$('mapTooltip').hidden=true}
-function setCountry(name){trackToramiEvent('map-country-'+name.toLowerCase().replace(/[^a-z0-9]+/g,'-'),'Map country selected: '+name);currentSelection=name;updateSelection(name);renderMapColors();const pane=$('mapSelection');pane?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'})}
-function updateSelection(name){const title=$('selectedName'),desc=$('selectedDescription'),link=$('selectedLink');if(!title)return;if(!name){title.textContent=t('chooseMap');desc.textContent=t('selectedDescription');link.href='destination.html?country=greece';return}const g=guideByMapName(name);title.textContent=g?langName(g):countryLabel(name);desc.textContent=g?(language==='ja'?g.descJa:g.desc):(visited.has(name)?t('visitedDraft'):t('unvisited'))+' · '+(language==='ja'?'ガイドは準備中':'Guide coming soon');link.href='destination.html?country='+encodeURIComponent(g?g.key:name)}
-function setupSearch(){const input=$('destinationSearch'),results=$('searchResults');if(!input||!results)return;const names=WORLD.features.map(f=>({label:f.properties.name,ja:window.TORAMI_COUNTRY_JA?.[f.properties.name]||f.properties.name,name:f.properties.name,kind:'country'}));const other=[{label:'Maldives',ja:'モルディブ',name:'Maldives',kind:'country'},{label:'Singapore',ja:'シンガポール',name:'Singapore',kind:'country'}];const cities=D.guides.flatMap(g=>g.cities.map(c=>({label:c[0],ja:c[1],name:g.name,city:c[0],kind:'city'})));const options=[...D.guides.map(g=>({label:g.name,ja:g.ja,name:g.name,kind:'country'})),...cities,...names,...other];const dedup=new Set();const unique=options.filter(o=>{const key=o.kind+':'+o.label;if(dedup.has(key))return false;dedup.add(key);return true});let found=[];
-function update(){const val=unaccent(input.value.trim());if(!val){found=[];results.hidden=true;return}found=unique.filter(o=>unaccent(o.label).includes(val)||unaccent(o.ja||'').includes(val)).slice(0,9);results.innerHTML=found.length?found.map((o,i)=>`<button type="button" role="option" data-result="${i}"><span>${safe(language==='ja'?(o.ja||o.label):o.label)}</span><small>${o.kind==='city'?(language==='ja'?'都市':'CITY'):(language==='ja'?'国':'COUNTRY')}</small></button>`).join(''):`<p class="map-fineprint" style="padding:10px">${language==='ja'?'該当する旅先がありません':'No destinations found'}</p>`;results.hidden=false;qa('button',results).forEach(b=>b.addEventListener('click',()=>open(found[Number(b.dataset.result)])))}
-function open(item){if(!item)return;trackToramiEvent('search-'+item.kind,'Destination search result selected');const g=guideByMapName(item.name);let url='destination.html?country='+encodeURIComponent(g?g.key:item.name);if(item.city)url+='&city='+encodeURIComponent(item.city);window.location.href=url}
-input.addEventListener('input',update);input.addEventListener('keydown',e=>{if(e.key==='Escape')results.hidden=true;if(e.key==='Enter'){e.preventDefault();open(found[0])}});$('searchButton')?.addEventListener('click',()=>{update();open(found[0])});document.addEventListener('click',e=>{if(!e.target.closest('.discovery-search'))results.hidden=true})}
-function renderGuide(){const params=new URLSearchParams(window.location.search);const key=params.get('country')||'greece';const city=params.get('city');const g=lookupGuide(key);const name=g?langName(g):countryLabel(key);const guideCity=g&&city?g.cities.find(c=>unaccent(c[0])===unaccent(city)||unaccent(c[1])===unaccent(city)):null;const heading=$('guideHeading'),description=$('guideDescription'),photo=$('guidePhoto'),stamp=$('guideStamp'),cities=$('guideCities');if(!heading)return;heading.textContent=guideCity?(language==='ja'?guideCity[1]:guideCity[0]):name;document.title=(guideCity?guideCity[0]+' · ':'')+(g?g.name:key)+' | TORAMI TRAVEL';description.textContent=g?(language==='ja'?g.descJa:g.desc):(language==='ja'?'その国の旅ガイドは、これから追加していきます。':'A destination guide for this place is coming soon.');stamp.textContent=g?'EDITORIAL DESTINATION GUIDE':'GUIDE IN PROGRESS';if(g&&g.photo){photo.classList.remove('fallback');photo.innerHTML=`<img src="${imagePath(g.photo)}" alt="${safe(g.name)} concept photography">`}else{photo.classList.add('fallback');photo.innerHTML='<img src="assets/images/crystal-orb.webp" alt="Decorative crystal orb">'}if(g&&g.cities.length){cities.innerHTML=g.cities.map(c=>`<a href="destination.html?country=${encodeURIComponent(g.key)}&city=${encodeURIComponent(c[0])}"><span>${safe(language==='ja'?c[1]:c[0])} </span><span>↗</span></a>`).join('')}else cities.innerHTML=`<p class="editorial-note">${language==='ja'?'都市ガイドを準備中です。':'City guides are coming soon.'}</p>`}
-function renderJourneys(){const list=$('journalList');if(!list)return;const arr=D.visitedCountryNames.map(name=>{const g=lookupGuide(name);return g||{key:name,name:name,ja:countryLabel(name),tag:'DRAFT MAP HIGHLIGHT',tagJa:'仮登録の訪問国',desc:'Personal notes coming soon.',descJa:'旅の記録はこれから追加します。',photo:''}});list.innerHTML=arr.map(makeCard).join('')}
-let gachaSelected=null,gachaCity=null,gachaBusy=false;function renderGachaSelection(){const c=$('gachaCountry'),city=$('gachaCity');if(!c)return;c.textContent=gachaSelected?langName(gachaSelected):'?';city.textContent=gachaCity?(language==='ja'?gachaCity[1]:gachaCity[0]):'?'}
-function randomPick(list){if(!list.length)return null;try{const a=new Uint32Array(1);window.crypto.getRandomValues(a);return list[a[0]%list.length]}catch(e){return list[Math.floor(Math.random()*list.length)]}}
-function possibleGuides(){const mode=$('gachaMode').value;return D.guides.filter(g=>mode==='all'||(mode==='visited'&&visited.has(g.name))||(mode==='unvisited'&&!visited.has(g.name))||(mode==='coast'&&g.type.includes('coast'))||(mode==='nature'&&g.type.includes('nature'))||(mode==='budget'&&g.budget==='low')||(mode==='europe'&&g.continent==='Europe')||(mode==='asia'&&g.continent==='Asia'))}
-function setupGacha(){const country=$('drawCountry'),city=$('drawCity'),notice=$('gachaNotice'),machine=q('.gacha-machine');if(!country)return;$('gachaMode').addEventListener('change',()=>{gachaSelected=null;gachaCity=null;city.disabled=true;$('gachaGuideLink').hidden=true;notice.textContent='';renderGachaSelection()});country.addEventListener('click',()=>{if(gachaBusy)return;const options=possibleGuides();if(!options.length){notice.textContent=t('gachaNoMatch');return}gachaBusy=true;country.disabled=true;city.disabled=true;notice.textContent=t('gachaDrawing');machine.classList.add('spinning');const alternatives=options.filter(g=>!gachaSelected||g.key!==gachaSelected.key);const selection=randomPick(alternatives.length?alternatives:options);setTimeout(()=>{gachaSelected=selection;trackToramiEvent('gacha-country','Country gacha draw');gachaCity=null;renderGachaSelection();country.disabled=false;city.disabled=false;gachaBusy=false;notice.textContent=t('gachaCountryDone');$('gachaGuideLink').hidden=true;machine.classList.remove('spinning')},740)});city.addEventListener('click',()=>{if(!gachaSelected||gachaBusy)return;const opts=gachaSelected.cities.filter(c=>!gachaCity||c[0]!==gachaCity[0]);gachaCity=randomPick(opts.length?opts:gachaSelected.cities);trackToramiEvent('gacha-city','City gacha draw');renderGachaSelection();notice.textContent=t('gachaCityDone');const a=$('gachaGuideLink');a.href=guideLink(gachaSelected)+'&city='+encodeURIComponent(gachaCity[0]);a.hidden=false})}
-// No destination guide implies no claim that the country was personally visited.
-setupHeader();if(document.body.dataset.page==='home'){renderFeatured()}if(document.body.dataset.page==='atlas'){renderMap();setupSearch()}if(document.body.dataset.page==='gacha')setupGacha();renderLanguage();
+let lang="ja";try{lang=localStorage.getItem("torami_lang")==="en"?"en":"ja"}catch(e){}
+let activeCountry=null,activeMode="visits",activeRegion="all",gachaCountry=null,gachaCity=null;
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+const tr=k=>(dict[k]||[k,k])[lang==="ja"?0:1];
+const name=c=>c?(lang==="ja"?c.ja:c.en):"";
+const country=iso=>C.get(iso)||{iso,en:iso,ja:iso,region:"",cover:""};
+const countryName=iso=>name(country(iso));
+const rname=r=>regions[r]?(lang==="ja"?regions[r][0]:regions[r][1]):r;
+const cityName=p=>lang==="ja"?p.cityJa:p.cityEn;
+const esc=s=>String(s??"").replace(/[&<>"']/g,t=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[t]));
+const countryLink=iso=>"destination.html?country="+encodeURIComponent(iso);
+const cityLink=p=>countryLink(p.iso)+"&city="+encodeURIComponent(p.slug);
+const covers=iso=>posts.filter(p=>p.iso===iso);
+const featuredCountryCodes=[...new Set(posts.map(p=>p.iso))];
+const track=(action,label="")=>{try{if(window.goatcounter&&typeof window.goatcounter.count==="function")window.goatcounter.count({path:"/event/"+action+(label?"/"+String(label).replace(/[^a-z0-9-]/gi,""):""),title:action,event:true});}catch(e){}};
+function toast(message){const el=$("#toast");if(!el)return;el.textContent=message;el.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove("show"),2600)}
+function photoOrPlaceholder(src,label="✧"){return src?`<img loading="lazy" src="${esc(src)}" alt="${esc(label)}">`:`<div class="destination-placeholder" aria-label="${esc(tr("no_photos"))}">✧</div>`}
+function card(c){
+return `<a class="destination-card glass" href="${countryLink(c.iso)}">
+<div class="destination-photo">${photoOrPlaceholder(c.cover,name(c))}</div>
+<div class="destination-title"><span>${esc(name(c))}<small>${esc(rname(c.region))}</small></span><span aria-hidden="true">↗</span></div></a>`;
+}
+function normalize(v){return String(v??"").toLocaleLowerCase().normalize("NFKC").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim()}
+function searchItems(value){const q=normalize(value);if(!q)return[];
+const locations=posts.filter(x=>[x.cityJa,x.cityEn,countryName(x.iso),country(x.iso).en].some(v=>normalize(v).includes(q))).map(x=>({title:cityName(x),sub:countryName(x.iso),href:cityLink(x)}));
+const countries=db.countries.filter(c=>[c.en,c.ja].some(v=>normalize(v).includes(q))).map(c=>({title:name(c),sub:rname(c.region),href:countryLink(c.iso)}));
+const found=[...countries,...locations],seen=new Set();return found.filter(x=>{if(seen.has(x.href))return false;seen.add(x.href);return true}).slice(0,8);
+}
+function localizeStatic(){
+document.documentElement.lang=lang;
+$$("[data-i18n]").forEach(el=>{el.textContent=tr(el.dataset.i18n)});
+$$("[data-i18n-placeholder]").forEach(el=>el.placeholder=tr(el.dataset.i18nPlaceholder));
+$("#language-toggle").innerHTML=(lang==="ja"?"日本語":"English")+" <span>⌄</span>";
+document.title=($("body").dataset.page==="home"?"TORAMI TRAVEL":document.title.split(" | ")[0]+" | TORAMI TRAVEL");
+}
+function imageUrl(p){return p?.photo||"assets/img/aurora-ribbons.webp"}
+function renderMap(container,context){
+if(!container||!window.TORAMI_GEM_MAP)return;
+container.innerHTML=window.TORAMI_GEM_MAP;
+const hits=container.querySelectorAll(".country-hit");
+const fillByIso=new Map([...container.querySelectorAll(".map-fill")].map(el=>[el.dataset.iso,el]));
+function highlight(){fillByIso.forEach((el,iso)=>{let active=activeMode==="visits"?db.visitedConfirmed.includes(iso):activeMode==="photos"?!!covers(iso).length:true;el.classList.toggle("visited",active)})}
+highlight();
+const choose=(iso)=>{track("map-country",iso);if(context==="home"){location.href=countryLink(iso)}else{activeCountry=iso;renderAtlasInfo();container.querySelectorAll(".country-hit").forEach(el=>el.classList.toggle("selected",el.dataset.iso===iso))}};
+hits.forEach(el=>{
+  el.addEventListener("click",()=>choose(el.dataset.iso));
+  el.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();choose(el.dataset.iso)}});
+  el.addEventListener("mouseenter",()=>{const c=country(el.dataset.iso);const hint=context==="home"?$(".map-hover-hint"):null;if(hint)hint.textContent=name(c)});
+  el.addEventListener("mouseleave",()=>{const hint=context==="home"?$(".map-hover-hint"):null;if(hint)hint.textContent=tr("tap_map")});
+});
+container.dataset.ready="true";
+}
+function renderHome(){
+renderMap($("#home-map"),"home");
+const featured=[50,44,40].map(id=>posts.find(p=>p.id===id)).filter(Boolean);
+$("#home-stories").innerHTML=featured.map(p=>`<a class="story-card" href="${cityLink(p)}"><img loading="lazy" src="${esc(p.photo)}" alt="${esc(cityName(p))}"><div class="story-caption"><h3>${esc(cityName(p))}</h3><small>${esc(countryName(p.iso))} · ${esc(p.date)}</small></div></a>`).join("");
+const form=$("#home-search-form"),inp=$("#home-search"),sug=$("#home-suggestions");
+if(!form.dataset.bound){
+form.addEventListener("submit",ev=>{ev.preventDefault();const item=searchItems(inp.value)[0];track("home-search");location.href=item?item.href:"destinations.html?q="+encodeURIComponent(inp.value)});
+inp.addEventListener("input",()=>{sug.innerHTML=searchItems(inp.value).map(o=>`<a class="suggestion-item" href="${o.href}">${esc(o.title)} <small>· ${esc(o.sub)}</small></a>`).join("")});
+inp.addEventListener("blur",()=>setTimeout(()=>sug.innerHTML="",200));
+form.dataset.bound="yes";
+}}
+function renderAtlasInfo(){
+const elem=$("#atlas-selected");if(!elem)return;
+const c=activeCountry?country(activeCountry):null;
+if(!c){elem.innerHTML=`<div class="map-empty-icon">✧</div><h2>${esc(tr("tap_country"))}</h2><p>${esc(tr("atlas_desc"))}</p>`;return}
+const has=!!c.cover;
+elem.innerHTML=`${has?`<img src="${esc(c.cover)}" alt="${esc(name(c))}">`:"<div class='map-empty-icon'>✧</div>"}
+<span class="eyebrow">${esc(tr("selected_country"))}</span>
+<h2>${esc(name(c))}</h2><p>${esc(rname(c.region))} · ${esc(has?tr("photos_verified"):tr("no_photo_note"))}</p>
+<a class="pearl-button" href="${countryLink(c.iso)}">${esc(tr("see_details"))}</a>`;
+}
+function renderAtlas(){
+const el=$("#atlas-map");renderMap(el,"atlas");renderAtlasInfo();
+const photoCountries=db.countries.filter(c=>c.cover);$("#atlas-cards").innerHTML=photoCountries.map(card).join("");
+if(!$("#map-modes").dataset.bound){$("#map-modes").addEventListener("click",ev=>{const b=ev.target.closest("[data-mode]");if(!b)return;activeMode=b.dataset.mode;$$("#map-modes .pill").forEach(x=>x.classList.toggle("active",x===b));renderMap(el,"atlas");track("map-mode",activeMode)});$("#map-modes").dataset.bound="yes";}
+}
+function renderDestinations(){
+const input=$("#destination-search");const only=$("#has-photo-only"),list=$("#country-cards");let q=new URLSearchParams(location.search).get("q")||input.value||"";
+if(input.value!==q)input.value=q;
+const query=normalize(q);
+let all=db.countries.filter(c=>(!only.checked||!!c.cover)&& (activeRegion==="all"||c.region===activeRegion));
+if(query){all=all.filter(c=>[c.ja,c.en,...covers(c.iso).flatMap(p=>[p.cityJa,p.cityEn])].some(t=>normalize(t).includes(query)))}
+all.sort((a,b)=>(Number(!!b.cover)-Number(!!a.cover))||name(a).localeCompare(name(b),lang==="ja"?"ja":"en"));
+list.innerHTML=all.map(card).join("")||`<p>${esc(lang==="ja"?"該当する旅先がありません。":"No destinations found.")}</p>`;
+$("#destination-count").textContent=all.length+" "+tr("count_label");
+if(!list.dataset.bound){
+input.addEventListener("input",()=>{history.replaceState(null,"",location.pathname+(input.value?"?q="+encodeURIComponent(input.value):""));renderDestinations()});
+$("#listing-search-form").addEventListener("submit",e=>e.preventDefault());
+only.addEventListener("change",renderDestinations);
+$("#country-filters").addEventListener("click",e=>{const b=e.target.closest("[data-region]");if(!b)return;activeRegion=b.dataset.region;$$("#country-filters .pill").forEach(x=>x.classList.toggle("active",x===b));renderDestinations();track("region-filter",activeRegion)});
+list.dataset.bound="yes";
+}}
+function renderDestination(){
+const el=$("#destination-detail");if(!el)return;
+const qs=new URLSearchParams(location.search),iso=qs.get("country")||"GRC",c=country(iso),pall=covers(iso);
+const slug=qs.get("city"),selected=slug?pall.find(p=>p.slug===slug):null;
+const cityposts=selected?pall.filter(x=>x.slug===slug):pall;
+const cover=selected?.photo||c.cover||"";
+const title=selected?cityName(selected):name(c);
+const engTitle=selected?selected.cityEn:c.en;
+const uniq=[...new Map(pall.map(x=>[x.slug,x])).values()];
+const gallery=[...new Set(cityposts.flatMap(x=>x.photos))].slice(0,15);
+let hero=`<section class="destination-hero ${cover?"":"destination-empty-hero"}">${cover?`<img src="${esc(cover)}" alt="${esc(title)}">`:""}<div class="destination-hero-text"><span class="eyebrow" style="color:white">TORAMI DESTINATION GUIDE</span><h1>${esc(title)}</h1><p>${esc(engTitle)} · ${esc(rname(c.region))}</p></div></section>`;
+let cities=uniq.length?uniq.map(p=>`<a class="glass" href="${cityLink(p)}">${esc(cityName(p))} ↗</a>`).join(""):`<p>${esc(tr("unverified"))}</p>`;
+el.innerHTML=`<a href="destinations.html" class="destination-back">← ${esc(tr("all_destinations"))}</a>${hero}
+<div class="destination-layout"><section><div class="section-top"><h2>${esc(tr("places_text"))}</h2><span class="eyebrow">${esc(pall.length)} ${esc(tr("post_label"))}</span></div>
+<div class="city-pills"><a class="glass" href="${countryLink(iso)}">${esc(name(c))}</a>${cities}</div>
+<h2 style="margin-top:40px">${esc(tr("gallery_text"))}</h2>
+${gallery.length?`<div class="photo-gallery">${gallery.map(src=>`<img loading="lazy" src="${esc(src)}" alt="${esc(title)}">`).join("")}</div>`:`<div class="glass notice-box"><p>${esc(tr("no_photo_note"))}</p></div>`}</section>
+<aside class="side-panel glass"><span class="eyebrow">THE WORLD IS YOURS</span><h3>${esc(title)}</h3><p>${esc(rname(c.region))}</p><p class="info-unverified">${esc(tr("unverified"))}</p>
+<a class="pearl-button" href="atlas.html">${esc(tr("nav_atlas"))} ↗</a>
+<p style="margin-top:25px"><a href="${IG}" target="_blank" rel="noopener noreferrer">Instagram ↗</a></p></aside></div>`;
+document.title=title+" | TORAMI TRAVEL";
+}
+const themes=[
+{id:"coast",codes:["MEX","GRC","PRT","THA","PHL","ITA","IDN","ESP","GUM"]},
+{id:"nature",codes:["CHE","FIN","SWE","USA","IDN","PRT"]},
+{id:"cities",codes:["FRA","CZE","ITA","DNK","GBR","KOR","CHN","ESP","USA"]},
+{id:"culture",codes:["KHM","EGY","JPN","GRC","ITA","VNM","TWN"]},
+{id:"escape",codes:["GRC","CHE","ARE","QAT","PRT","FRA"]},
+{id:"hidden",codes:["VNM","PRT","MEX","FIN","PHL","CZE"]}
+];
+let themeId="coast";
+function renderThemes(){
+$("#theme-tabs").innerHTML=themes.map(t=>`<button class="pill ${t.id===themeId?"active":""}" data-theme="${t.id}">${esc(tr("theme_"+t.id))}</button>`).join("");
+const chosen=themes.find(t=>t.id===themeId);
+$("#theme-results").innerHTML=`<div class="theme-intro-card glass"><span class="eyebrow">THEMED JOURNEYS</span><h2>${esc(tr("theme_"+themeId))}</h2><p>${esc(tr("theme_"+themeId+"_sub"))}</p></div><div class="destination-grid">${chosen.codes.map(iso=>card(country(iso))).join("")}</div>`;
+if(!$("#theme-tabs").dataset.bound){$("#theme-tabs").addEventListener("click",e=>{const b=e.target.closest("[data-theme]");if(!b)return;themeId=b.dataset.theme;track("theme-select",themeId);renderThemes()});$("#theme-tabs").dataset.bound="yes";}
+}
+function renderRankings(){
+const choices=[50,44,41,47,58,17,1,48,38,29,7,25].map(i=>posts.find(p=>p.id===i)).filter(Boolean);
+$("#ranking-collection").innerHTML=choices.map((p,i)=>`<a class="ranking-card glass" href="${cityLink(p)}"><div class="ranking-img"><img loading="lazy" src="${esc(p.photo)}" alt="${esc(cityName(p))}"><span class="ranking-index">${String(i+1).padStart(2,"0")}</span></div><div class="ranking-caption"><span class="eyebrow">${esc(tr("ranking_photo"))}</span><h3>${esc(cityName(p))}</h3><p>${esc(countryName(p.iso))}</p></div></a>`).join("");
+}
+function dateLabel(t){const d=new Date(t+"T00:00:00Z");return lang==="ja"?`${d.getUTCFullYear()}年${d.getUTCMonth()+1}月`:`${d.toLocaleDateString("en-US",{month:"short",year:"numeric",timeZone:"UTC"})}`}
+let diaryFilter="all";
+function renderDiary(){
+const select=$("#diary-select");
+select.innerHTML=`<option value="all">${esc(tr("filter_all"))}</option>`+[...new Set(posts.map(p=>p.iso))].sort((a,b)=>countryName(a).localeCompare(countryName(b),lang==="ja"?"ja":"en")).map(iso=>`<option value="${esc(iso)}" ${diaryFilter===iso?"selected":""}>${esc(countryName(iso))}</option>`).join("");
+let match=posts.filter(p=>diaryFilter==="all"||p.iso===diaryFilter);
+$("#diary-count").textContent=match.length+" "+tr("post_label");
+$("#diary-posts").innerHTML=match.map(p=>`<article class="diary-card glass"><div class="diary-img"><img loading="lazy" src="${esc(p.photo)}" alt="${esc(cityName(p))}"></div><div class="diary-body"><span class="eyebrow">${esc(dateLabel(p.date))} · ${esc(countryName(p.iso))}</span><h3>${esc(cityName(p))}</h3><div class="diary-thumbs">${p.photos.map(img=>`<img loading="lazy" src="${esc(img)}" alt="${esc(cityName(p))}">`).join("")}</div><p><a href="${cityLink(p)}">${esc(tr("travel_guide"))}</a></p></div></article>`).join("");
+if(!select.dataset.bound){select.addEventListener("change",()=>{diaryFilter=select.value;track("diary-filter",diaryFilter);renderDiary()});select.dataset.bound="yes";}
+}
+function selectGachaCountry(){
+const region=$("#gacha-region").value;
+const eligible=[...new Set(posts.map(p=>p.iso))].filter(iso=>region==="all"||country(iso).region===region);
+if(!eligible.length){toast(lang==="ja"?"この地域の旅行写真は準備中です。":"More photos are coming for this region.");return}
+gachaCountry=eligible[Math.floor(Math.random()*eligible.length)];gachaCity=null;
+$("#gacha-city").disabled=false;$("#gacha-share").disabled=false;
+$("#gacha-machine").parentElement.classList.remove("spinning");void $("#gacha-machine").offsetWidth;$("#gacha-machine").parentElement.classList.add("spinning");
+renderGachaResult();track("gacha-country",gachaCountry);
+}
+function selectGachaCity(){
+if(!gachaCountry)return;const pool=covers(gachaCountry);gachaCity=pool[Math.floor(Math.random()*pool.length)];renderGachaResult();track("gacha-city",gachaCity.slug)
+}
+function renderGachaResult(){
+const el=$("#gacha-result");if(!gachaCountry){el.innerHTML=`<div class="gacha-pending"><span>✧</span><p>${esc(tr("gacha_pending"))}</p></div>`;return}
+const c=country(gachaCountry),photo=gachaCity?.photo||c.cover;
+el.innerHTML=`<div class="gacha-result-photo"><img src="${esc(photo)}" alt="${esc(name(c))}"><div class="gacha-result-label"><span class="eyebrow" style="color:#fff">${esc(tr(gachaCity?"city_drew":"country_drew"))}</span><h3>${esc(gachaCity?cityName(gachaCity):name(c))}</h3><p>${esc(gachaCity?name(c):rname(c.region))} · <a href="${gachaCity?cityLink(gachaCity):countryLink(gachaCountry)}">${esc(tr("travel_guide"))}</a></p></div></div>`;
+}
+async function saveResult(){
+if(!gachaCountry)return;
+const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext("2d");
+const bg=ctx.createLinearGradient(0,0,1080,1350);bg.addColorStop(0,"#f0ffff");bg.addColorStop(.5,"#b0eeee");bg.addColorStop(1,"#64bacc");ctx.fillStyle=bg;ctx.fillRect(0,0,1080,1350);
+let img=new Image();img.src=gachaCity?.photo||country(gachaCountry).cover;
+await new Promise(resolve=>{img.onload=resolve;img.onerror=resolve});
+if(img.complete&&img.naturalWidth){const scale=Math.max(930/img.width,770/img.height);let iw=img.width*scale,ih=img.height*scale;ctx.drawImage(img,75+(930-iw)/2,235+(770-ih)/2,iw,ih);}
+ctx.strokeStyle="#ffffff";ctx.lineWidth=14;ctx.strokeRect(65,225,950,790);
+ctx.font="italic 86px Georgia,serif";ctx.fillStyle="#1a6c7b";ctx.textAlign="center";ctx.fillText("TORAMI TRAVEL",540,145);
+ctx.font="30px serif";ctx.fillText("THE WORLD IS YOURS",540,195);
+ctx.fillStyle="#e6fcfa";ctx.fillRect(40,1030,1000,230);ctx.fillStyle="#185f70";
+ctx.font="600 66px serif";ctx.fillText(gachaCity?cityName(gachaCity):countryName(gachaCountry),540,1128);
+ctx.font="30px serif";ctx.fillText(gachaCity?countryName(gachaCountry):rname(country(gachaCountry).region),540,1194);
+ctx.font="28px serif";ctx.fillText("@findmeoutthere25",540,1296);
+const a=document.createElement("a");a.download="torami-travel-gacha.png";a.href=canvas.toDataURL("image/png");a.click();
+track("gacha-share");toast(lang==="ja"?"画像を作成しました。保存を確認してね。":"Your share image is ready.");
+}
+function renderGacha(){
+renderGachaResult();
+if(!$("#gacha-country").dataset.bound){
+$("#gacha-country").addEventListener("click",selectGachaCountry);
+$("#gacha-city").addEventListener("click",selectGachaCity);
+$("#gacha-again").addEventListener("click",()=>{gachaCountry=null;gachaCity=null;$("#gacha-city").disabled=true;$("#gacha-share").disabled=true;renderGachaResult()});
+$("#gacha-share").addEventListener("click",saveResult);
+$("#gacha-country").dataset.bound="yes";
+}}
+function pageRender(){
+localizeStatic();
+const page=$("body").dataset.page;
+if(page==="home")renderHome();
+if(page==="atlas")renderAtlas();
+if(page==="destinations")renderDestinations();
+if(page==="destination")renderDestination();
+if(page==="themes")renderThemes();
+if(page==="rankings")renderRankings();
+if(page==="gacha")renderGacha();
+if(page==="diary")renderDiary();
+}
+$("#language-toggle").addEventListener("click",()=>{lang=lang==="ja"?"en":"ja";try{localStorage.setItem("torami_lang",lang)}catch(e){}pageRender();track("language-change",lang)});
+$("#mobile-toggle").addEventListener("click",()=>{const nav=$("#site-nav"),v=!nav.classList.contains("open");nav.classList.toggle("open",v);$("#mobile-toggle").setAttribute("aria-expanded",String(v))});
+document.addEventListener("click",ev=>{const a=ev.target.closest("a");if(a&&a.href)track("navigation",a.getAttribute("href")||"")});
+pageRender();
 })();
