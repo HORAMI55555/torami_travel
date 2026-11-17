@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /torami_travel/studio.html
+Sitemap: https://horami55555.github.io/torami_travel/sitemap.xml
