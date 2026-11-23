@@ -65,3 +65,46 @@ body[data-page=home] .map-viewport{padding:0;margin-left:auto;margin-right:auto}
 .geo-country .country-hit{fill:transparent!important;stroke:#fff4cb!important;stroke-width:.55;vector-effect:non-scaling-stroke;pointer-events:fill!important}.geo-country:hover .country-hit,.geo-country:focus-visible .country-hit,.geo-country.is-active .country-hit{stroke:#fff!important;stroke-width:2;fill:#ffffff18!important}.geo-country:focus-visible{outline:none}.geo-country.is-locator .country-hit{stroke-width:1.5}.geo-country.is-locator .geo-base{fill:#d4e8e6}.geo-country.is-locator.is-match .geo-base{fill:#008e9b}
 @media(min-width:851px){body[data-page=home] .live-atlas{max-width:none;width:100%}body[data-page=home] .map-viewport{max-width:calc(100vw - 32px)}}
 @media(max-width:850px){html{background:#cbe5e4;overscroll-behavior-y:none}body{isolation:isolate;overscroll-behavior-y:none}body:before{position:fixed!important;top:-160px!important;bottom:-160px!important;left:0!important;right:0!important;width:100%!important;height:calc(100lvh + 320px)!important;min-height:calc(100vh + 320px)!important;z-index:0!important;background:url('../img/jewel-atmosphere-mobile.png') center center/cover no-repeat!important;transform:translateZ(0);pointer-events:none}#app{position:relative;z-index:1}}
+
+/* Registered gemstone atlas. A country's visible face is its only hit target. */
+.jewel-world{display:block;width:100%;max-width:none;height:auto;overflow:hidden;user-select:none;-webkit-user-select:none}
+.gem-face{fill:url(#gem-art);stroke:#8b6b36;stroke-width:1.45;stroke-linejoin:round;stroke-linecap:round}
+.gem-country{outline:none;cursor:pointer;pointer-events:none}
+.gem-country .gem-face{pointer-events:fill}
+.gem-rim,.gem-light,.gem-land{pointer-events:none}
+.gem-rim{fill:none;stroke:#ffecb6;stroke-width:.74;stroke-linejoin:round;stroke-linecap:round}
+.gem-light{fill:none;stroke:none}
+.gem-face.gem-pin{fill:#157a86;stroke-width:.8}
+.gem-country:focus-visible .gem-rim{stroke:#fff;stroke-width:2.4}
+@media(hover:hover){.gem-country:hover .gem-rim{stroke:white;stroke-width:1.7}}
+.gem-country.is-visited .gem-light{fill:url(#lit-stone);stroke:#fff5b6;stroke-width:1.15;stroke-linejoin:round}
+.gem-country.is-visited .gem-face{stroke:#86601f;stroke-width:2.2}
+.gem-country.theme-match .gem-rim,.gem-country.is-wanted .gem-rim{stroke:#b493dd;stroke-width:2}
+.gem-country.is-visited.theme-match .gem-light{stroke:#c89fdd}
+body[data-page=home] .map-viewport{width:var(--map-width,min(90vw,800px));max-width:calc(100% - 12px);height:auto;aspect-ratio:978/584;overflow:auto;overscroll-behavior-x:contain;scroll-behavior:auto;scroll-padding:0;direction:ltr;border:0}
+.map-viewport.can-pan{cursor:grab}
+.map-viewport.can-pan:active{cursor:grabbing}
+#passport-map{max-width:850px;margin-inline:auto}
+.map-utility{max-width:920px;margin:8px auto 0}
+.gem-zoom-buttons{display:inline-flex;align-items:center;border:1px solid #ffffffe6;border-radius:24px;background:#f1fbf4d9;padding:0 3px}
+.gem-zoom-buttons button{border:0;background:transparent;min-width:44px;min-height:44px;color:#174c58;font-size:17px;padding:4px}
+.gem-zoom-buttons #gem-scale{font:600 12px var(--sans);font-variant-numeric:tabular-nums}
+.gem-zoom-buttons button:disabled{opacity:.37;cursor:default}
+.map-picker-label select{min-height:44px}
+.gem-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.gem-actions button,.gem-actions a{min-height:44px;margin:0}
+.map-country-card .gem-save-status{min-height:1.5em;color:#175c60}
+@media(max-width:850px),(hover:none) and (pointer:coarse){
+  html,body{background:#b5dfdf url('../img/mobile-sky.webp') center top / 100% auto repeat-y;min-height:100%;overscroll-behavior-y:none}
+  body{min-height:100vh;min-height:100dvh}
+  body::before{display:none!important}
+}
+@media(max-width:600px){
+  .map-utility{display:flex;flex-direction:column;gap:6px;padding:6px 8px}
+  .map-utility>p{margin:0}
+  .map-zoom{gap:6px}
+  .map-note{font-size:11px}
+}
+@media(min-width:851px){
+  .map-heading h2{font-size:clamp(36px,4.6vw,53px)}
+}
