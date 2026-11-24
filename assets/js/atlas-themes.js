@@ -1,8 +1,8 @@
 /* Atlas display rules. Values on the map and on the country card use the same record. */
-window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
+window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,compactCount,visitedIds}){
   const data=window.TORAMI_ATLAS_RATINGS;
   const pdf='https://www.tourism.gov.in/static/uploads/2026/09/a1ff37713ad3922f69778dca13aa65ab.pdf';
-  const colors=['#EAFDFC','#BFEFE7','#48E1D9','#009E9B','#006D6B'];
+  const colors=['#157bcb', '#24ccd1', '#68dbad', '#f0bf63', '#df85aa'];
   const primary=[['all','All'],['safety','Safety'],['budget','Budget'],['trending','Arrivals']];
   const collections=[
     {key:'summer',title:'Summer',caption:t('6〜8月のおすすめ月を登録した旅先','Destinations with June–August in their season notes')},
@@ -14,7 +14,7 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
     safety:{
       title:t('渡航情報の見方','Reading travel advisories'),
       note:t('外務省の危険情報を5色に対応させています。国・地域内で最も高い警戒レベルで着色しています。旅行する場所の最新情報は国別の出典で確認できます。','Colours reflect the highest Japanese MOFA advisory within each destination. Open the source for current advice for your specific route.'),
-      labels:[t('外務省4・退避','MOFA 4 · evacuate'),t('外務省3・渡航中止','MOFA 3 · avoid travel'),t('外務省2・不要不急の渡航中止','MOFA 2 · essential travel only'),t('外務省1・十分注意','MOFA 1 · caution'),t('危険情報の発出なし','No advisory issued')]
+      labels:[t('外務省4・退避','MOFA 4 · evacuate'),t('外務省3・渡航中止','MOFA 3 · avoid travel'),t('外務省2・不要不急の渡航中止','MOFA 2 · essential travel only'),t('外務省1・十分注意','MOFA 1 · caution'),t('危険情報の発出なし','No advisory issued')].reverse()
     },
     budget:{
       title:t('1人・1日あたりの現地旅費','Local travel cost per person, per day'),
@@ -23,8 +23,8 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
     },
     trending:{
       title:t('海外からの観光客到着数','International tourist arrivals'),
-      note:t('2019年の国際観光客の到着延べ回数。M＝100万回。国により日帰り客を含む場合があります。','International arrivals in 2019. M = million. Some countries include same-day visitors.'),
-      labels:['< 0.5M','0.5–<2M','2–<5M','5–<15M','15M+']
+      note:t('各国の最新収録年の到着延べ回数。国により日帰り客を含む場合があります。','Latest recorded arrivals by destination. M = million. Some countries include same-day visitors.'),
+      labels:[t('50万回未満','< 0.5M'),t('50万回〜','0.5M+'),t('200万回〜','2M+'),t('500万回〜','5M+'),t('1,500万回〜','15M+')]
     }
   };
   function budgetRecord(d){
@@ -45,12 +45,12 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
     if(!saved&&!row)return null;
     const risk=saved?info.mofaLevel:row[0];
     if(!Number.isInteger(risk)||risk<0||risk>4)return null;
-    const level=5-risk;
+    const level=1+risk;
     return {level,value:risk,detail:scales.safety.labels[level-1],note:saved?info.summary:t('外務省海外安全情報・域内の最高警戒レベル','Japan MOFA · highest advisory within the destination'),date:saved?info.updatedAt:data.checked,source:saved?validURL(info.source):row[1]};
   }
   function trendRecord(d){
-    const value=d.arrivals2019;if(value==null)return null;
-    return {level:1+[5e5,2e6,5e6,15e6].filter(n=>value>=n).length,value,detail:value.toLocaleString()+t(' 回',' arrivals'),date:'2026-11-24',note:'2019 · UN Tourism / '+(d.arrivalsWB?'World Bank':'OWID'),source:d.arrivalsWB?'https://data.worldbank.org/indicator/ST.INT.ARVL':'https://ourworldindata.org/grapher/international-tourist-trips'};
+    const value=d.arrivalsLast?.[1];if(value==null)return null;
+    return {level:1+[5e5,2e6,5e6,15e6].filter(n=>value>=n).length,value,detail:compactCount(value)+' ('+d.arrivalsLast[0]+')',date:'2026-11-24',note:d.arrivalsLast[0],source:d.arrSource};
   }
   function seasonal(d,key){
     if(!d.climate)return null;
@@ -65,7 +65,7 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
   const readers={safety:safetyRecord,budget:budgetRecord,trending:trendRecord,summer:d=>seasonal(d,'summer'),winter:d=>seasonal(d,'winter')};
   function legend(key){
     const scale=scales[key];
-    return `<div class="scale-header"><p class="eyebrow">${key.toUpperCase()}</p><h3>${scale.title}</h3></div><ol class="jewel-scale">${scale.labels.map((label,i)=>`<li><i class="scale-stone" style="--stone:${colors[i]}"></i><span>LEVEL ${i+1}</span><strong>${label}</strong></li>`).join('')}</ol><p class="scale-note">${scale.note}</p><p class="scale-missing"><i></i>${t('スモーキークォーツは対象外・データ未収録','Smoky quartz marks unavailable or inapplicable data')}</p>`;
+    return `<div class="scale-header"><p class="eyebrow">${key.toUpperCase()}</p><h3>${scale.title}</h3></div><ol class="jewel-scale">${scale.labels.map((label,i)=>`<li><i class="scale-stone" style="--stone:${colors[i]}"></i><span>LEVEL ${i+1}</span><strong>${label}</strong></li>`).join('')}</ol><p class="scale-note">${scale.note}</p><p class="scale-missing"><i></i>${t('パールホワイト：データなし・対象外','Pearl white marks unavailable or inapplicable data')}</p>`;
   }
   function menu(){
     return `<div class="primary-modes" role="group" aria-label="${t('地図テーマ','Map themes')}">${primary.map(([key,title])=>`<button type="button" data-mode="${key}" aria-pressed="${key==='all'}">${title}</button>`).join('')}</div><button class="more-modes-toggle" id="more-modes-toggle" aria-label="${t('旅のテーマを選ぶ','More travel themes')}" aria-expanded="false" aria-controls="more-modes">›</button><div class="more-modes glass atlas-menu" id="more-modes" hidden><div class="mood-options">${collections.filter(c=>c.ids).map(c=>`<button type="button" data-mode="${c.key}" aria-pressed="false">${photo(by(c.ids[0]))}<span><strong>${c.title}</strong><small>${c.caption}</small></span></button>`).join('')}</div><div class="map-shortcuts">${collections.filter(c=>!c.ids).map(c=>`<button type="button" data-mode="${c.key}" aria-pressed="false">${c.title}</button>`).join('')}</div></div>`;
@@ -111,14 +111,14 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
       heading.hidden=key==='all';
       heading.innerHTML=scale?legend(key):collection?`<h3>${collection.title}</h3><p>${collection.caption}</p>`:'';
       const label=primary.find(p=>p[0]===key)?.[1]||collection?.title;
-      status.textContent=key==='all'?t('世界の195カ国・2地域','195 countries · 2 regions'):label+' · '+list.length+t('カ国・地域',' destinations');
+      status.textContent=key==='all'?t('世界の197カ国','197 countries'):label+' · '+list.length+t('カ国・地域',' destinations');
       results.hidden=key==='all';results.innerHTML='';
       if(key==='all')return;
       if(!list.length){
         results.innerHTML=`<p>${key==='my'?t('国を選んで、最初の旅を記録しましょう。','Select a country to record your first visit.'):t('このテーマの旅先はまだ登録されていません。','No destinations have been added to this theme yet.')}</p>`;
         return;
       }
-      if(scale)list.sort((a,b)=>key==='budget'?records.get(a.id).value-records.get(b.id).value:records.get(b.id).level-records.get(a.id).level);
+      if(scale)list.sort((a,b)=>(key==='budget'||key==='safety')?records.get(a.id).value-records.get(b.id).value:records.get(b.id).level-records.get(a.id).level);
       const links=list.map(d=>`<a class="atlas-postcard" href="${href(d)}">${photo(d)}<span><strong>${esc(d.en)}</strong><small>${esc(t(d.ja,d.region))}</small>${reader?`<small>Lv.${records.get(d.id).level} · ${esc(records.get(d.id).detail)}</small>`:''}</span></a>`).join('');
       results.innerHTML=scale?`<details><summary>${t('データのある旅先を見る','Explore destinations with data')} (${list.length})</summary><div class="atlas-postcards">${links}</div></details>`:`<div class="atlas-postcards">${links}</div>`;
     }
