@@ -3,18 +3,10 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
   const data=window.TORAMI_ATLAS_RATINGS;
   const pdf='https://www.tourism.gov.in/static/uploads/2026/09/a1ff37713ad3922f69778dca13aa65ab.pdf';
   const colors=['#EAFDFC','#BFEFE7','#48E1D9','#009E9B','#006D6B'];
-  const primary=[['all','All'],['safety','Safety'],['budget','Budget'],['trending','Trending']];
-  const moods=[
-    ['blue','Blue Escape','ターコイズの海へ','Follow the turquoise coast','MV GR PH SC PW BZ FJ'],
-    ['cinema','Cinematic Cities','映画のワンシーンを歩く','Step into a film still','IT FR JP CZ AT HK GB'],
-    ['aurora','Aurora Nights','オーロラを待つ夜','Chase the northern lights','IS NO FI SE CA US'],
-    ['pastel','Pastel Streets','パステル色の街角','Wander pastel streets','PT DK IT CU MT MX'],
-  ];
+  const primary=[['all','All'],['safety','Safety'],['budget','Budget'],['trending','Arrivals']];
   const collections=[
-    ...moods.map(([key,title,ja,en,codes])=>({key,title,caption:t(ja,en),ids:codes.split(' ').map(by).filter(Boolean).map(d=>d.id)})),
     {key:'summer',title:'Summer',caption:t('6〜8月のおすすめ月を登録した旅先','Destinations with June–August in their season notes')},
     {key:'winter',title:'Winter',caption:t('12〜2月のおすすめ月を登録した旅先','Destinations with December–February in their season notes')},
-    {key:'resort',title:'Resort',caption:t('リゾートで過ごす休日','A resort getaway')},
     {key:'my',title:'My Travels',caption:t('あなたが訪問済みに登録した旅先','Places in your passport')},
     {key:'torami',title:'TORAMI’s Travels',caption:t('トラみちゃんが訪れた旅先','Places TORAMI has visited')}
   ];
@@ -30,9 +22,9 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
       labels:[t('¥5,000未満','Under ¥5,000'),'¥5,000–9,999','¥10,000–19,999','¥20,000–29,999','¥30,000'+t('以上','+')]
     },
     trending:{
-      title:t('国際観光客の到着数ランキング','International tourist arrivals ranking'),
-      note:t('2025年の国際観光客到着数で比べた人気度。出典表に掲載の上位22カ国・地域を収録しています。','Popularity by international tourist arrivals in 2025. The source table covers the top 22 destinations.'),
-      labels:[t('18位以下','Rank 18+'),t('13〜17位','Ranks 13–17'),t('8〜12位','Ranks 8–12'),t('4〜7位','Ranks 4–7'),t('1〜3位','Ranks 1–3')]
+      title:t('海外からの観光客到着数','International tourist arrivals'),
+      note:t('2019年の国際観光客の到着延べ回数。M＝100万回。国により日帰り客を含む場合があります。','International arrivals in 2019. M = million. Some countries include same-day visitors.'),
+      labels:['< 0.5M','0.5–<2M','2–<5M','5–<15M','15M+']
     }
   };
   function budgetRecord(d){
@@ -42,7 +34,7 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
     if(!stored&&!row)return null;
     const [value,currency,region]=stored?[Number(b.daily),b.currency]:row;
     const rate={JPY:1,EUR:165,USD:150}[currency];
-    if(!rate)return null;
+    if(!rate||!(value>0))return null;
     const yen=Math.round(value*rate);
     const level=1+[5000,10000,20000,30000].filter(limit=>yen>=limit).length;
     return {level,value:yen,detail:'¥'+yen.toLocaleString()+' / '+t('人・日','person/day')+(currency==='JPY'?'':' · '+currency+' '+value.toLocaleString()),note:stored?b.basis:'Budget Your Trip',date:stored?b.updatedAt:data.checked,source:stored?validURL(b.source):'https://www.budgetyourtrip.com/'+region+'/rankings'};
@@ -57,15 +49,23 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
     return {level,value:risk,detail:scales.safety.labels[level-1],note:saved?info.summary:t('外務省海外安全情報・域内の最高警戒レベル','Japan MOFA · highest advisory within the destination'),date:saved?info.updatedAt:data.checked,source:saved?validURL(info.source):row[1]};
   }
   function trendRecord(d){
-    const info=d.trending||{},saved=Number.isInteger(Number(info.rank))&&Number(info.rank)>0&&info.updatedAt&&validURL(info.source);
-    const rank=saved?Number(info.rank):data.trending[d.code];
-    if(!rank)return null;
-    return {level:5-[3,7,12,17].filter(cut=>rank>cut).length,value:rank,detail:t('世界','World rank #')+rank+t('位',''),note:saved?t('登録された集計','Recorded ranking'):t('2025年 · 国際観光客到着数（インド観光省／UN Tourism）','2025 international tourist arrivals · India Ministry of Tourism / UN Tourism'),date:saved?info.updatedAt:data.checked,source:saved?validURL(info.source):pdf};
+    const value=d.arrivals2019;if(value==null)return null;
+    return {level:1+[5e5,2e6,5e6,15e6].filter(n=>value>=n).length,value,detail:value.toLocaleString()+t(' 回',' arrivals'),date:'2026-11-24',note:'2019 · UN Tourism / '+(d.arrivalsWB?'World Bank':'OWID'),source:d.arrivalsWB?'https://data.worldbank.org/indicator/ST.INT.ARVL':'https://ourworldindata.org/grapher/international-tourist-trips'};
   }
-  const readers={safety:safetyRecord,budget:budgetRecord,trending:trendRecord};
+  function seasonal(d,key){
+    if(!d.climate)return null;
+    const months=key==='summer'?[5,6,7]:[11,0,1],c=d.climate;
+    const value=Math.round(months.reduce((s,m)=>s+c.temp[m],0)*10/3)/10;
+    const rain=months.reduce((s,m)=>s+c.rain[m],0);
+    return {level:1+[5,15,22,28].filter(n=>value>=n).length,value,detail:c.place+' · '+value+' °C · '+rain+' mm',note:t('3か月の平均気温・合計降水量','Three-month mean temperature and total precipitation')+' · WorldClim 2.1 (1970–2000)',date:'2026-11-24',source:'https://www.worldclim.org/data/worldclim21.html'};
+  }
+  for(const key of ['summer','winter']){
+    scales[key]={title:(key==='summer'?'6–8':'12–2')+t('月の気候',' · monthly climate'),note:t('代表都市付近の平年値（WorldClim 2.1、1970–2000年）。どの国も同じ暦月で比較。色は気温を表し、国を選ぶと降水量も表示します。','WorldClim 2.1, 1970–2000 normals near the named city. Colours show temperature for the same calendar months worldwide. Select a destination for rainfall.'),labels:['< 5°C','5–<15°C','15–<22°C','22–<28°C','28°C+']};
+  }
+  const readers={safety:safetyRecord,budget:budgetRecord,trending:trendRecord,summer:d=>seasonal(d,'summer'),winter:d=>seasonal(d,'winter')};
   function legend(key){
     const scale=scales[key];
-    return `<div class="scale-header"><p class="eyebrow">${key.toUpperCase()}</p><h3>${scale.title}</h3></div><ol class="jewel-scale">${scale.labels.map((label,i)=>`<li><i class="scale-stone" style="--stone:${colors[i]}"></i><span>LEVEL ${i+1}</span><strong>${label}</strong></li>`).join('')}</ol><p class="scale-note">${scale.note}</p><p class="scale-missing"><i></i>${t('斜線は比較できるデータがない国・地域','Hatching marks destinations without comparable data')}</p>`;
+    return `<div class="scale-header"><p class="eyebrow">${key.toUpperCase()}</p><h3>${scale.title}</h3></div><ol class="jewel-scale">${scale.labels.map((label,i)=>`<li><i class="scale-stone" style="--stone:${colors[i]}"></i><span>LEVEL ${i+1}</span><strong>${label}</strong></li>`).join('')}</ol><p class="scale-note">${scale.note}</p><p class="scale-missing"><i></i>${t('スモーキークォーツは対象外・データ未収録','Smoky quartz marks unavailable or inapplicable data')}</p>`;
   }
   function menu(){
     return `<div class="primary-modes" role="group" aria-label="${t('地図テーマ','Map themes')}">${primary.map(([key,title])=>`<button type="button" data-mode="${key}" aria-pressed="${key==='all'}">${title}</button>`).join('')}</div><button class="more-modes-toggle" id="more-modes-toggle" aria-label="${t('旅のテーマを選ぶ','More travel themes')}" aria-expanded="false" aria-controls="more-modes">›</button><div class="more-modes glass atlas-menu" id="more-modes" hidden><div class="mood-options">${collections.filter(c=>c.ids).map(c=>`<button type="button" data-mode="${c.key}" aria-pressed="false">${photo(by(c.ids[0]))}<span><strong>${c.title}</strong><small>${c.caption}</small></span></button>`).join('')}</div><div class="map-shortcuts">${collections.filter(c=>!c.ids).map(c=>`<button type="button" data-mode="${c.key}" aria-pressed="false">${c.title}</button>`).join('')}</div></div>`;
@@ -102,11 +102,12 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
         const record=records.get(el.dataset.mapCountry);
         el.classList.toggle('mood-match',!!collection&&ids.has(el.dataset.mapCountry));
         el.classList.toggle('unrated',!!scale&&!record);
+        el.style.setProperty('--gem-fill','url(#jewel-tone-'+(record?.level||6)+')');
         el.style.setProperty('--stone',record?colors[record.level-1]:'transparent');
         el.classList.toggle('rated',!!record);
       }
       map.classList.toggle('rated-map',!!scale);
-      map.classList.toggle('mood-map',!!collection);
+      map.classList.toggle('mood-map',!!collection&&!scale);
       heading.hidden=key==='all';
       heading.innerHTML=scale?legend(key):collection?`<h3>${collection.title}</h3><p>${collection.caption}</p>`:'';
       const label=primary.find(p=>p[0]===key)?.[1]||collection?.title;
@@ -117,7 +118,7 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
         results.innerHTML=`<p>${key==='my'?t('国を選んで、最初の旅を記録しましょう。','Select a country to record your first visit.'):t('このテーマの旅先はまだ登録されていません。','No destinations have been added to this theme yet.')}</p>`;
         return;
       }
-      if(scale)list.sort((a,b)=>key==='budget'||key==='trending'?records.get(a.id).value-records.get(b.id).value:records.get(b.id).level-records.get(a.id).level);
+      if(scale)list.sort((a,b)=>key==='budget'?records.get(a.id).value-records.get(b.id).value:records.get(b.id).level-records.get(a.id).level);
       const links=list.map(d=>`<a class="atlas-postcard" href="${href(d)}">${photo(d)}<span><strong>${esc(d.en)}</strong><small>${esc(t(d.ja,d.region))}</small>${reader?`<small>Lv.${records.get(d.id).level} · ${esc(records.get(d.id).detail)}</small>`:''}</span></a>`).join('');
       results.innerHTML=scale?`<details><summary>${t('データのある旅先を見る','Explore destinations with data')} (${list.length})</summary><div class="atlas-postcards">${links}</div></details>`:`<div class="atlas-postcards">${links}</div>`;
     }
@@ -129,7 +130,7 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,visitedIds}){
       refresh(){if(mode==='my')choose('my')},
       detail(d){
         if(!scales[mode])return '';
-        const record=records.get(d.id),label=primary.find(p=>p[0]===mode)[1];
+        const record=records.get(d.id),label=primary.find(p=>p[0]===mode)?.[1]||collections.find(c=>c.key===mode)?.title;
         if(mode==='safety'&&d.code==='KP')return `<div class="atlas-country-info">${t('北朝鮮全土への渡航自粛要請（段階評価の対象外）','Japan requests that its nationals refrain from travel throughout North Korea. Outside the numeric scale.')}<a href="https://www.anzen.mofa.go.jp/info/pcinfectionspothazardinfo_035.html" target="_blank" rel="noopener noreferrer">${t('外務省の情報を見る','View MOFA advice')} ↗</a></div>`;
         if(mode==='safety'&&d.code==='JP')return `<div class="atlas-country-info">${t('日本国内は外務省の海外危険情報の対象外です。','Japan is outside the scope of MOFA’s overseas travel advisories.')}</div>`;
         if(!record)return `<div class="atlas-country-info">${label} · ${t('比較データ未収録','No comparable data')}${mode==='safety'?`<a href="https://www.anzen.mofa.go.jp/riskmap/" target="_blank" rel="noopener noreferrer">${t('外務省の地域別情報を見る','Check MOFA advisories')} ↗</a>`:''}</div>`;

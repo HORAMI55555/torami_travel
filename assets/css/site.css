@@ -194,3 +194,23 @@ body[data-page=home] .map-viewport{width:var(--map-width,min(90vw,800px));max-wi
 .passport .map-heading h2{margin:8px auto;font-family:var(--serif)}
 @media(min-width:851px){.passport .map-heading h2{font-size:clamp(36px,4.6vw,53px)}}
 @media(max-width:600px){.passport .map-heading h2{font-size:clamp(20px,5.7vw,32px)}}
+
+/* The fixed artwork bleeds past the safe area as Safari's toolbars collapse.
+   Paint the root canvas as well, for scroll bounce and compositor transitions. */
+@media screen and (max-width:850px),screen and (hover:none) and (pointer:coarse){
+  html{background:#bddfe0 url('../img/jewel-atmosphere-mobile.png') center top / 100% auto repeat-y}
+  body::before{top:calc(-72px - env(safe-area-inset-top,0px))!important;bottom:auto!important;
+    height:calc(100vh + 144px + env(safe-area-inset-top,0px) + env(safe-area-inset-bottom,0px))!important;
+    height:calc(100lvh + 144px + env(safe-area-inset-top,0px) + env(safe-area-inset-bottom,0px))!important;
+    background:radial-gradient(ellipse 56% 18% at 50% 29%,#d9f1efba,transparent),url('../img/jewel-atmosphere-mobile.png') center 58% / cover no-repeat!important}
+}
+#map-viewport.rated-map .rated .gem-face{fill:var(--gem-fill)}
+#map-viewport.rated-map :is(.unrated,.gem-land) .gem-face{fill:url(#jewel-tone-6)}
+#map-viewport.rated-map .rated .gem-light{fill:none}
+#map-viewport.rated-map .rated .gem-pin{fill:var(--stone)}
+#map-viewport.rated-map .unrated .gem-pin{fill:#687b85}
+.scale-missing i,.scale-stone{background:conic-gradient(from 25deg at 33% 55%,#fff6,transparent 18%,#002f3a45 19%,transparent 45%,#fff8 46%,transparent 76%,#16424955),var(--stone,#77888e);border:1px solid #bcaa87;border-radius:5px}
+.objective-ranks{padding:0;list-style:none}.objective-ranks li{display:grid;grid-template-columns:3em 1fr auto;align-items:center;gap:.6em;padding:.55rem 1rem;border-bottom:1px solid #85babc66;background:#eefaf5c7}.objective-ranks li:first-child{border-radius:14px 14px 0 0}.objective-ranks strong{font-variant-numeric:tabular-nums}
+.climate-table{margin:20px 0;padding:16px}.climate-table th,.climate-table td{padding:.4em .6em;white-space:nowrap}.climate-table p{font-size:.85em}
+.diary-card:has([data-story="cancun-colours"]) .diary-cover img{object-position:center 66%}
+.story-view:has(img[src*="/cancun/"])>img,.photo-lightbox>img[src*="/cancun/"]{object-fit:contain;max-height:65vh;background:#e9f2ef;height:auto;width:100%}
