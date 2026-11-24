@@ -94,10 +94,19 @@ body[data-page=home] .map-viewport{width:var(--map-width,min(90vw,800px));max-wi
 .gem-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 .gem-actions button,.gem-actions a{min-height:44px;margin:0}
 .map-country-card .gem-save-status{min-height:1.5em;color:#175c60}
-@media(max-width:850px),(hover:none) and (pointer:coarse){
-  html,body{background:#b5dfdf url('../img/mobile-sky.webp') center top / 100% auto repeat-y;min-height:100%;overscroll-behavior-y:none}
-  body{min-height:100vh;min-height:100dvh}
-  body::before{display:none!important}
+/* Mobile browser chrome expands and contracts. Paint the photograph on a
+   fixed layer sized to the large viewport, with a small bleed on all edges. */
+@media screen and (max-width:850px),screen and (hover:none) and (pointer:coarse){
+  html{min-height:100%;background:#b9dfe0;overscroll-behavior-y:none}
+  body{background:transparent;isolation:isolate;min-height:100vh;min-height:100dvh;overscroll-behavior-y:none}
+  body::before{
+    content:"";display:block!important;position:fixed!important;top:-4px!important;left:-4px!important;right:-4px!important;bottom:auto!important;
+    width:auto!important;height:calc(100vh + 8px)!important;height:calc(100lvh + 8px)!important;min-height:0!important;
+    background:radial-gradient(ellipse 58% 22% at 50% 23%,#d5edecdd,transparent 100%),url('../img/jewel-atmosphere-mobile.png') center 61% / cover no-repeat!important;
+    z-index:0!important;pointer-events:none;transform:translateZ(0);
+  }
+  #app{position:relative;z-index:1}
+  .hero-brand-area .pearl-brand::before{content:"";position:absolute;z-index:-1;inset:-16% -7%;border-radius:50%;background:radial-gradient(ellipse,#e0f4f1df 12%,#deefef85 48%,transparent 73%);pointer-events:none}
 }
 @media(max-width:600px){
   .map-utility{display:flex;flex-direction:column;gap:6px;padding:6px 8px}
@@ -108,3 +117,80 @@ body[data-page=home] .map-viewport{width:var(--map-width,min(90vw,800px));max-wi
 @media(min-width:851px){
   .map-heading h2{font-size:clamp(36px,4.6vw,53px)}
 }
+
+/* The gemstone texture stays visible beneath the five atlas colours. */
+#map-viewport[data-theme=all] .gem-light{fill:none;stroke:none}
+#map-viewport[data-theme=all] .gem-face{filter:saturate(1.23) contrast(1.04)}
+#map-viewport[data-theme=all] .is-visited .gem-face{stroke:#8b6b36;stroke-width:1.45}
+#map-viewport.rated-map .gem-country .gem-light{fill:none;stroke:none}
+#map-viewport.rated-map .rated .gem-light{fill:var(--stone);fill-opacity:.86}
+#map-viewport.rated-map :is(.unrated,.gem-land) .gem-face{fill:url(#gem-unrated)}
+#map-viewport.rated-map .gem-pin{stroke-width:.9}
+#map-viewport.mood-map .gem-country:not(.mood-match) .gem-face,#map-viewport.mood-map .gem-land .gem-face{filter:grayscale(.85);opacity:.55}
+#map-viewport.mood-map .gem-country .gem-light{fill:none;stroke:none}
+#map-viewport.mood-map .mood-match .gem-face{filter:saturate(1.4)}
+#map-viewport.mood-map .mood-match .gem-rim{stroke:#fff2bd;stroke-width:1.45}
+#map-viewport[data-theme=my] .is-visited .gem-light{fill:url(#lit-stone);stroke:#ffeda6;stroke-width:1}
+.live-atlas .map-toolbar{width:min(900px,100%);margin-inline:auto;justify-content:center}
+.live-atlas .more-modes-toggle{font-size:24px;line-height:1;min-width:38px;min-height:38px;transition:transform .18s}
+.live-atlas .more-modes-toggle[aria-expanded=true]{transform:rotate(90deg)}
+.live-atlas .more-modes-toggle.is-current{background:#10727c;color:white}
+.live-atlas .atlas-menu{width:min(370px,calc(100vw - 34px));padding:12px;border:1px solid #f5fff7;border-radius:20px;box-shadow:0 10px 35px #14596138;background:#e2f2ee;max-height:min(480px,60vh);overflow:auto}
+.atlas-menu .mood-options{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.live-atlas .mood-options button{position:relative;isolation:isolate;overflow:hidden;padding:0;width:100%;height:81px;border:1px solid #fffb;border-radius:13px;color:white;text-align:left}
+.mood-options img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.mood-options button:before{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#12383df2,transparent 100%);z-index:-1}
+.mood-options span{position:absolute;bottom:7px;left:9px}
+.mood-options strong,.mood-options small{display:block}
+.mood-options strong{font:600 18px/1.15 var(--serif)}
+.mood-options small{font:11px/1.6 var(--sans)}
+.mood-options button[aria-pressed=true]{outline:2px solid #00878a;outline-offset:1px}
+.map-shortcuts{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
+.live-atlas .map-shortcuts button{min-height:38px;font:14px var(--serif);padding:3px 9px;background:#ffffff91}
+.atlas-caption{width:min(770px,calc(100% - 28px));margin:0 auto 14px;border-radius:20px;padding:15px 19px;color:#174d52}
+.atlas-caption h3{font:600 clamp(18px,2.2vw,24px)/1.35 var(--serif);margin:0}
+.atlas-caption p{margin:4px 0 0;font-size:12px}
+.scale-header .eyebrow{margin:0 0 3px;font-size:10px}
+.jewel-scale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));list-style:none;padding:0;margin:12px 0 8px;gap:7px}
+.jewel-scale li{text-align:center;min-width:0}
+.scale-stone{display:block;border:1px solid #bfa570;border-radius:8px;background:linear-gradient(136deg,#fff7 0% 14%,transparent 14% 43%,#ffffff52 43% 53%,transparent 53%),linear-gradient(30deg,#00333317,transparent 55%,#fff7),var(--stone);box-shadow:inset 0 0 0 1px #ffffff73}
+.jewel-scale .scale-stone{height:23px}
+.jewel-scale span{display:block;font:600 11px/1.45 var(--serif);letter-spacing:.06em;margin-top:3px}
+.jewel-scale strong{display:block;font:500 12px/1.35 var(--sans);overflow-wrap:anywhere}
+.atlas-caption .scale-note{font-size:12px;line-height:1.55}
+.scale-missing i{display:inline-block;vertical-align:middle;width:15px;height:12px;margin-right:5px;background:repeating-linear-gradient(135deg,#b0c4c4 0 3px,#809b9b 3px 4px);border-radius:2px}
+.atlas-postcards{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;padding:7px 1px}
+.atlas-postcard{position:relative;isolation:isolate;flex:0 0 146px;scroll-snap-align:start;border-radius:15px;overflow:hidden;min-height:152px;color:#fff}
+.atlas-postcard img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;z-index:-2}
+.atlas-postcard:before{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#133637eb,transparent 86%);z-index:-1}
+.atlas-postcard span{display:block;padding:67px 10px 10px;color:white}
+.atlas-postcard strong,.atlas-postcard small{display:block;line-height:1.35}
+.atlas-postcard strong{font:600 18px/1.2 var(--serif)}
+.atlas-postcard small{font-size:11px;margin-top:3px}
+#map-results{max-width:880px;padding:14px 18px}
+#map-results summary{cursor:pointer;font-weight:600;font-size:13px;padding:6px}
+.atlas-country-info{border:1px solid #b9dbd4;border-radius:12px;padding:9px;background:#f0f8f4}
+.atlas-country-info .scale-stone{display:inline-block;width:17px;height:17px;margin-right:5px;vertical-align:middle}
+.atlas-country-info small,.atlas-country-info a{display:block;font-size:12px;margin-top:4px}
+.atlas-country-info a{text-decoration:underline}
+@media(max-width:600px){
+  .atlas-caption{padding:12px}
+  .jewel-scale{gap:4px}
+  .jewel-scale strong{font-size:11px}
+  .live-atlas .atlas-menu{right:0;width:min(365px,calc(100vw - 38px))}
+  .live-atlas .more-modes-toggle{min-width:36px}
+}
+
+#passport-map{width:min(100%,1060px);max-width:100%;margin:0 auto;aspect-ratio:978/584;overflow:auto;scroll-behavior:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+#passport-map .gem-country:not(.is-visited):not(.is-favourite):not(.is-wanted) .gem-face{filter:saturate(.73)}
+#passport-map .is-favourite:not(.is-visited) .gem-light{fill:#ecacc7;fill-opacity:.66;stroke:#fff0f7;stroke-width:1}
+#passport-map .is-wanted:not(.is-favourite):not(.is-visited) .gem-light{fill:#b59ce1;fill-opacity:.56;stroke:#f4e8ff;stroke-width:1}
+.passport-atlas-bar,.passport-key{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.passport-atlas-bar{margin:8px auto 20px;gap:14px}
+.passport-key{font-size:12px}
+.passport-key i{display:inline-block;width:12px;height:12px;transform:rotate(45deg);border:1px solid #b49863;border-radius:3px;background:#e7f4a9}
+.passport-key i:nth-of-type(2){background:#ecacc7}
+.passport-key i:nth-of-type(3){background:#b59ce1}
+.passport .map-heading h2{margin:8px auto;font-family:var(--serif)}
+@media(min-width:851px){.passport .map-heading h2{font-size:clamp(36px,4.6vw,53px)}}
+@media(max-width:600px){.passport .map-heading h2{font-size:clamp(20px,5.7vw,32px)}}
