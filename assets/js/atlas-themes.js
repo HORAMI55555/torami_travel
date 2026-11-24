@@ -28,7 +28,7 @@ window.TORAMI_ATLAS = function({all,by,t,esc,photo,href,validURL,compactCount,vi
     }
   };
   function budgetRecord(d){
-    const b=d.budget||{};
+    const b=d.budget||{};if(b.status==='review')return null;
     const stored=Number(b.daily)>0&&b.updatedAt&&b.basis;
     const row=data.budget[d.code];
     if(!stored&&!row)return null;
