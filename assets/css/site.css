@@ -235,3 +235,163 @@ body:is([data-page=diary],[data-page=rankings],[data-page=mytrip]) .site-header{
 .map-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(165px,22%);align-items:center;gap:14px}.own-map{width:100%;max-width:none;aspect-ratio:978/584;overflow:auto;margin:0}.own-map .gem-face{fill:url(#jewel-tone-6)}.own-map [data-stone=visited] .gem-face{fill:url(#my-purple)}.own-map [data-stone=favorite] .gem-face{fill:url(#gem-art)}.own-map [data-stone=wanted] .gem-face{fill:url(#jewel-tone-2)}.own-map .gem-rim{stroke:#ebcd91}.map-actions{justify-content:center;margin:9px auto}.layer-card h3{font-size:17px;margin-top:0}.layer-card label,.layer-card p{display:flex;align-items:center;gap:7px;margin:7px 0;font-size:14px}.layer-card b,.layer-card input{margin-left:auto}.layer-card input{accent-color:#107d90;width:21px;height:21px}.layer-card hr{border:0;border-top:1px solid #c7b780}.stone-visited{color:#9a63c6}.stone-favorite{color:#008d7d}.stone-wanted{color:#369ed2}.map-modes [data-only-layer=visited][aria-pressed=true]{background:linear-gradient(145deg,#cf9cee,#8d52af,#ac81c9)}.saved-tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}.saved-tiles .crystal-panel{margin:6px 0}.trip-page .storage-note{text-align:center;font-size:13px}
 @media(max-width:760px){#app>.mobile-backdrop{top:calc(-48px - env(safe-area-inset-top,0px));bottom:auto;left:0;width:100%;height:calc(100vh + 96px);height:calc(100lvh + 96px + env(safe-area-inset-top,0px) + env(safe-area-inset-bottom,0px));object-fit:cover;object-position:center;transform:translateZ(0)}.collection-page{padding-inline:9px}.glass-ribbon{margin-bottom:12px}.glass-ribbon button{font-size:13px;gap:3px}.glass-ribbon i{display:none}.trip-tabs button{font-size:12px}.map-layout{grid-template-columns:1fr}.layer-card{margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:3px 8px}.layer-card h3,.layer-card hr{grid-column:1/-1}.layer-card h3{margin:0}.layer-card p,.layer-card label{font-size:12px}.layer-card p:last-child{grid-column:1/-1}.collection-title{margin-top:16px}.podium-card{border-radius:22px 22px 12px 12px}.rank-gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.rank-postcard{aspect-ratio:.85}.rank-postcard span{font-size:12px}.map-modes{margin-bottom:4px}.saved-tiles{gap:6px}.saved-tiles h3{font-size:23px}}
 .rank-art-caption{position:absolute;left:23%;right:24%;top:63%;height:17%;display:grid;place-content:center;text-align:center;background:linear-gradient(90deg,transparent,#258fa7 10%,#268da3 90%,transparent);color:white;font:500 clamp(8px,1.8vw,21px) Georgia,'Yu Mincho',serif;white-space:nowrap}.own-map [data-stone=wanted] .gem-face{fill:url(#my-sky)}.ranking-categories>div:last-child{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.ranking-categories button{isolation:isolate;position:relative;overflow:hidden;width:clamp(88px,18%,155px);aspect-ratio:1.5;border:2px solid #c7a773;border-radius:42% 42% 14px 14px;background:#eefbff;color:#174b52;box-shadow:0 0 0 2px white}.ranking-categories img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1}.ranking-categories span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:end;padding:5px;background:linear-gradient(transparent,#efffffeb 55%);font-weight:600;font-size:clamp(11px,1.6vw,17px)}.ranking-categories small{font:italic 11px Georgia}.ranking-categories i{font:18px Georgia}.ranking-categories button[aria-pressed=true]{outline:2px solid #1593a3}.rank-page .podium-card:only-child{grid-column:2}
+
+/* Shared navigation, travel map controls and passport. */
+body:is([data-page=diary],[data-page=rankings],[data-page=mytrip]) .site-header{display:block}
+.site-header{position:relative;z-index:32;background:linear-gradient(110deg,#659da7,#7db8c1 72%,#74aeb9);backdrop-filter:none}
+.header-inner{justify-content:initial}.header-inner .site-nav{margin-inline-start:auto}.nav-back{display:inline-grid;place-items:center;width:38px;height:38px;flex:0 0 auto;border:1px solid #ffffffab;border-radius:50%;color:white;font:32px/.85 Georgia,serif;text-decoration:none;padding-bottom:4px}.nav-back:focus-visible,.my-map-link:focus-visible{outline:3px solid #956b27}
+.collection-hero{z-index:1;background:linear-gradient(120deg,#78b5c1,#91cbd2 60%,#8dbfc5)}.collection-hero>img{mask-image:radial-gradient(ellipse 5.5% 25% at 4.5% 15%,transparent 72%,#000 99%),radial-gradient(ellipse 5.8% 26% at 95.8% 15%,transparent 72%,#000 99%);mask-composite:intersect}.hero-trip>img{mask-image:radial-gradient(ellipse 5.8% 30% at 4.8% 20%,transparent 68%,#000 99%),radial-gradient(ellipse 5.8% 30% at 95% 20%,transparent 68%,#000 99%)}
+#travel-map .map-utility{display:grid;justify-items:center;justify-content:center;gap:9px;margin:8px auto 18px;padding:4px 14px;max-width:620px}
+#travel-map .map-zoom{display:grid;grid-template-columns:max-content minmax(122px,190px);gap:10px;align-items:center;max-width:100%}
+#travel-map .map-picker-label{display:block;font-size:0}
+#travel-map .map-picker-label select{width:100%;max-width:none;background:#eefaf7f2;border-radius:22px;border:1px solid #cbaf72;color:#214e58;min-height:44px;padding:6px 10px}
+.my-map-link{display:inline-flex;align-items:center;gap:.55em;min-height:38px;color:#21505b;font:italic 20px Georgia,serif;text-decoration:none;border-bottom:1px solid #b99e67}.my-map-link small{font:500 12px var(--sans)}
+.home-diary .diary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(10px,2vw,22px);max-width:850px;margin-inline:auto}
+.home-album{position:relative;display:block;isolation:isolate;aspect-ratio:1;overflow:hidden;border:1px solid #d3b576;border-radius:17px;color:white;text-decoration:none;box-shadow:0 0 0 2px #ffffffa8,0 6px 20px #24586722}
+.home-album img{width:100%;height:100%;object-fit:cover;display:block}.home-album span{position:absolute;inset:0;padding:clamp(9px,2vw,20px);display:flex;flex-direction:column;justify-content:end;background:linear-gradient(transparent 42%,#113a4bd9)}.home-album strong{font:italic clamp(20px,3vw,38px)/1.1 Georgia,serif;color:white}.home-album small{letter-spacing:.14em;font:600 10px var(--sans);margin-bottom:3px}.home-album em{font:500 11px var(--sans);margin-top:3px}
+.trip-hint{margin:5px auto 15px;text-align:center;font-size:14px;line-height:1.55;max-width:47ch}.trip-page .map-layout{display:block;max-width:930px;margin:auto}.trip-page .diary-totals{max-width:900px}.trip-page .own-map{max-height:none}.passport-ledger{text-align:center}.passport-summary{display:flex;align-items:center;justify-content:center;gap:12px}.passport-summary b{font:italic 38px Georgia}.passport-summary p{margin:0}.passport-summary progress{max-width:23vw;accent-color:#9362bd}.passport-mini{width:min(495px,100%);margin:auto;pointer-events:none}.passport-mini .gem-face{fill:url(#jewel-tone-6)}.passport-mini .stamped .gem-face{fill:url(#pass-visited)}.stamp-book{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,155px));justify-content:center;gap:13px;margin:22px auto}.visit-stamp{background:#f8ffff;border:1px solid #c3a578;border-radius:48% 48% 10px 10px;overflow:hidden;text-decoration:none;color:#244c5b}.visit-stamp img{display:block;width:100%;aspect-ratio:1.3;height:auto;object-fit:cover}.visit-stamp span{display:block;padding:5px}
+@media(max-width:850px){.header-inner .site-nav{margin-inline-start:0}.site-header{padding-top:env(safe-area-inset-top,0px);background:#73aeb8}.header-inner .nav-back{width:30px;height:32px;margin-right:3px;font-size:25px}.header-inner .brand{min-width:0;flex:1 1 auto}}
+@media(max-width:760px){#app>.mobile-backdrop{top:calc(-62px - env(safe-area-inset-top,0px));height:calc(100vh + 112px);height:calc(100lvh + 112px + env(safe-area-inset-top,0px) + env(safe-area-inset-bottom,0px))}#travel-map .map-utility{gap:8px;margin:4px auto 20px}#travel-map .map-zoom{grid-template-columns:minmax(125px,auto) minmax(110px,172px);gap:8px}.home-diary .section-heading{gap:8px}.home-diary .section-heading h2{font-size:clamp(18px,5.3vw,29px)}.home-diary .section-heading .text-link{white-space:nowrap}}
+
+.country-guide{--guide-gold:#c3a572;--guide-ink:#154653;color:var(--guide-ink);padding-bottom:48px}
+.country-guide .breadcrumb{padding:14px 0;font-size:13px;letter-spacing:.03em}
+.guide-cover,.guide-paper{background:linear-gradient(125deg,#f8fffff5,#e2f6f6ed 73%,#c9ebebef);border:1px solid #c5ad79;border-radius:23px;box-shadow:inset 0 0 0 2px #ffffffd9,0 7px 24px #16495218}
+.guide-cover{display:grid;grid-template-columns:minmax(210px,.75fr) minmax(0,1.25fr);align-items:center;gap:clamp(16px,4vw,54px);padding:clamp(12px,2.5vw,29px);overflow:hidden}
+.guide-cover figure{position:relative;margin:0;min-width:0}.guide-cover figure img{display:block;aspect-ratio:1;width:100%;height:auto;object-fit:cover;border:1px solid var(--guide-gold);border-radius:45% 45% 12px 12px;box-shadow:0 0 0 3px #fffc}
+.guide-cover figcaption{font-size:10px;color:#325c61;text-align:center;margin-top:5px;line-height:1.4}
+.guide-title h1{font:500 clamp(2rem,5vw,4.8rem)/1.15 Georgia,'Yu Mincho',serif;overflow-wrap:anywhere;margin:.15em 0;color:#174752}
+.guide-title-en{margin:0;font:italic clamp(16px,2vw,27px) Georgia,serif;color:#5c775e}
+.guide-lede{margin:.9em 0}.guide-tags,.guide-actions,.guide-secondary{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.guide-tags a,.guide-index a{color:#245760;text-decoration:none}.guide-tags a{font-size:12px;border:1px solid #95bfc0;border-radius:15px;padding:3px 9px}
+.guide-actions{margin:17px 0 3px}.guide-actions .button{min-height:42px;padding:8px 14px;font-size:14px}
+.guide-index{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 23px;margin:14px auto;font-size:14px}.guide-index a{padding:6px 2px;border-bottom:1px solid #b39c74}
+.guide-paper{padding:clamp(15px,3.2vw,36px);margin:16px 0}.guide-heading{display:flex;align-items:center;justify-content:space-between;gap:14px}.guide-heading p{margin:0}.guide-heading h2,.guide-paper>h2{font:500 clamp(21px,3.4vw,36px)/1.3 Georgia,'Yu Mincho',serif;margin:3px 0 10px;color:#124b55}
+.guide-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:10px;margin:12px 0 16px}.guide-facts>div,.climate-readings>div{padding:12px;border-radius:12px;background:#ffffffa1;border:1px solid #bedada;min-width:0}.guide-facts dt,.climate-readings span,.guide-advisory-label{font-size:13px;font-weight:500;color:#476769}
+.guide-facts dd{font:500 clamp(16px,2.1vw,24px)/1.3 Georgia,'Yu Mincho',serif;margin:6px 0 3px;overflow-wrap:anywhere;color:#164954}.guide-facts small,.guide-advisory small,.guide-source{font-size:12px}.guide-source{color:#255f69;text-underline-offset:.2em}
+.guide-advisory{display:flex;align-items:center;justify-content:space-between;gap:12px;border-left:3px solid var(--guide-gold);padding:7px 13px;margin:14px 0;background:#fbfcf8b8}.guide-advisory strong,.guide-advisory small{display:block}.guide-advisory strong{font-size:16px;color:#214650}
+.guide-paper details{border-top:1px solid #bdd0cb;padding:10px 0;font-size:14px}.guide-paper summary{cursor:pointer;font-weight:550;color:#2b5661}.guide-heading select{display:block;border-radius:16px;border:1px solid var(--guide-gold);background:#f4ffff;color:#154653;padding:7px 12px;min-width:80px}.guide-heading label{font-size:12px}
+.climate-readings{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.climate-readings b{display:block;font:italic 26px Georgia,serif;color:#174f58}.guide-climate table{min-width:580px;font-size:13px;border-collapse:collapse;table-layout:auto;width:100%}.guide-climate th,.guide-climate td{padding:6px;text-align:center}.guide-climate .table-scroll{overflow:auto}
+.guide-albums{display:flex;flex-wrap:wrap;gap:10px}.guide-albums a{display:flex;align-items:center;gap:13px;text-decoration:none;color:#164650}.guide-albums img{display:block;width:clamp(80px,16vw,145px);aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid var(--guide-gold)}.guide-albums b{display:block;font:500 clamp(17px,3vw,26px) Georgia,serif}.guide-albums span{font-size:13px}.guide-secondary{justify-content:center}
+@media(max-width:650px){.guide-cover{grid-template-columns:minmax(85px,.78fr) minmax(0,1.22fr);gap:10px;padding:12px;align-items:center}.guide-title h1{font-size:clamp(23px,6.8vw,38px)}.guide-title-en{font-size:14px}.guide-cover .eyebrow{font-size:10px;letter-spacing:.08em}.guide-lede{font-size:13px;line-height:1.5}.guide-tags{gap:4px}.guide-actions{grid-column:1/-1;justify-content:center;margin:2px 0}.guide-title{display:contents}.guide-cover figure{grid-row:1/6}.guide-title h1,.guide-title>.eyebrow,.guide-title-en,.guide-lede,.guide-tags,.guide-title>p{grid-column:2;margin:0}.guide-tags a{font-size:11px}.guide-facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.guide-facts>div{padding:9px}.guide-actions .button{padding:7px 11px;min-height:40px;font-size:12px}.guide-index{gap:6px 13px}.guide-advisory{flex-wrap:wrap}.guide-heading h2{font-size:21px}.guide-facts dt{font-size:12px}.country-guide .country-section{margin-top:25px}}
+
+
+/* The diary follows a country, a city, then a photographic spread. */
+.diary-page {--diary-gold:#b99759;--diary-ink:#164954;--diary-ice:rgba(243,255,255,.87);color:var(--diary-ink)}
+.diary-page .glass-ribbon {margin-bottom:clamp(10px,2vw,22px)}
+.diary-page .glass-ribbon i {display:block;color:#256d78;font-style:normal}
+.diary-page .glass-ribbon [aria-pressed=true] i {color:white}
+.diary-search-row {width:min(100%,760px);margin:0 auto;display:flex;align-items:center;gap:clamp(6px,1.5vw,16px)}
+.diary-search-row .collection-search {min-width:0;width:auto;flex:1;margin:0;background:linear-gradient(165deg,#fff,#f8ffffe8 58%,#c6eaed);border-color:var(--diary-gold)}
+.diary-filter-button,.diary-arrow {background:linear-gradient(145deg,#fff,#dbf4f5);border:1px solid #c5ac74;color:var(--diary-ink);box-shadow:inset 0 0 0 2px #fff9,0 2px 7px #29585a22}
+.diary-filter-button {border-radius:22px;min-height:44px;display:grid;place-content:center;line-height:1.05;padding:5px 12px;white-space:nowrap;font-size:12px}
+.diary-filter-button i {font:20px/1 Georgia}.diary-page #diary-filters:not([hidden]) {display:flex;justify-content:center;flex-wrap:wrap;align-items:center;gap:12px;margin:10px auto}
+#diary-filters label {display:flex;align-items:center;gap:6px;font-size:13px}
+#diary-filters select {font:inherit;color:var(--diary-ink);border:1px solid var(--diary-gold);border-radius:20px;background:#f3ffff;padding:6px 9px}
+.diary-page .collection-title {margin:clamp(16px,2.4vw,27px) auto clamp(9px,1.5vw,16px)}
+.diary-page .collection-title h2 {display:flex;align-items:center;justify-content:center;gap:10px;font-size:clamp(20px,2.5vw,31px)}
+.diary-page .collection-title h2:before,.diary-page .collection-title h2:after {content:'';margin:0;width:clamp(20px,8vw,90px);height:1px;background:linear-gradient(90deg,transparent,var(--diary-gold))}
+.diary-page .collection-title h2:after {transform:rotate(180deg)}
+.diary-page .collection-title p {font-size:clamp(10px,1.3vw,14px);letter-spacing:.14em}
+.diary-carousel {display:flex;align-items:center;justify-content:center;gap:clamp(5px,1.4vw,16px)}
+.diary-arrow {flex:none;border-radius:50%;width:38px;height:38px;font:26px/1 Georgia;padding:0}
+.diary-page .arch-rail,.diary-page .city-rail {display:flex;justify-content:safe center;min-width:0;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;padding:5px 4px 8px;gap:clamp(8px,1.5vw,18px)}
+.diary-page .arch-card {flex:none;width:clamp(94px,17vw,165px);aspect-ratio:1/.99;scroll-snap-align:center;border:2px solid #d6bd84;box-shadow:0 0 0 1px white,0 2px 6px #477b7d44;border-radius:52% 52% 14px 14px}
+.diary-page .arch-card:after {content:'';position:absolute;inset:3px;pointer-events:none;border:1px solid #ffefc6ab;border-radius:inherit}
+.diary-page .arch-card span {padding:25px 4px 8px;background:linear-gradient(transparent,#f2ffffdb 33%,#effaf8 78%,#f7e8c8);color:#184651}
+.diary-page .arch-card strong {font:600 clamp(13px,2vw,18px)/1 Georgia,serif;letter-spacing:.035em}
+.diary-page .arch-card[aria-pressed=true],.diary-page .city-slide[aria-pressed=true] {outline:2px solid #37929c;outline-offset:1px}
+.diary-page .diary-totals {border-radius:14px;margin:10px auto;padding:7px 12px;width:fit-content;max-width:100%;display:flex;gap:12px;background:linear-gradient(110deg,#ecfaf9cc,#ffffffde,#cfedebd9)}
+.diary-page .diary-totals span {padding:0 8px;font-size:13px}
+.diary-page .diary-totals span+span {border-left:1px solid #c8b58b}
+.diary-page .diary-totals b {font-size:clamp(19px,2.6vw,28px);padding-right:3px}
+.diary-city-block,.diary-themes {border:1px solid #d8c79a;border-radius:20px;box-shadow:inset 0 0 0 2px #fffe,0 4px 12px #2269661c;background:linear-gradient(130deg,#edffffd1,#ffffffe3 48%,#d6f3f2da);overflow:hidden}
+.diary-city-block {text-align:center;padding-bottom:5px}
+.diary-city-block .collection-title {margin-top:11px}
+.diary-country-banner {position:relative;isolation:isolate;overflow:hidden;min-height:86px;display:grid;place-content:center;color:#164b55}
+.diary-country-banner img {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%;z-index:-2}
+.diary-country-banner:before {content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#d1eeee70,#eeffffef 35%,#f1fffff2 65%,#dbefef70)}
+.diary-country-banner h2 {font:italic clamp(23px,4.5vw,45px)/1.1 Georgia,serif;margin:9px 0 2px}.diary-country-banner a {font-size:12px;line-height:2}
+.diary-page .city-slide {flex:none;scroll-snap-align:center;width:clamp(126px,23vw,225px);border-radius:12px;aspect-ratio:1.85}
+.diary-page .city-slide span {background:linear-gradient(transparent,#104c5edb);padding:15px 5px 7px}
+.diary-page .city-slide strong {font:normal clamp(16px,2.2vw,24px) Georgia,serif}
+.diary-themes {text-align:center;margin:12px 0;padding:7px 10px 10px}
+.diary-themes h2 {font:500 15px Georgia,'Yu Mincho',serif;margin:0 0 6px}
+.diary-themes>div {display:grid;grid-template-columns:repeat(auto-fit,minmax(68px,1fr));gap:8px}
+.diary-themes button {border:none;border-radius:10px;background:transparent;color:var(--diary-ink);min-width:0;display:grid;justify-items:center;align-content:start;gap:1px;font:inherit;padding:2px}
+.diary-themes button i {display:grid;place-items:center;width:min(100%,64px);height:27px;margin-bottom:3px;border-radius:16px;border:1px solid #bdd7d7;background:linear-gradient(#fff,#d9efef);font:19px/1 Georgia}
+.diary-themes strong {font-weight:500;font-size:clamp(10px,1.3vw,13px)}.diary-themes small {font:italic 10px Georgia}.diary-themes [aria-pressed=true] i {background:linear-gradient(#5bc5c8,#137781);color:white}
+.diary-current-filter {text-align:right}.diary-current-filter:empty {display:none}.diary-page .album-spread {margin:12px 0}
+.diary-page .album-spread h3 {font-family:Georgia,'Times New Roman',serif;letter-spacing:-.045em;line-height:1}
+.diary-page .album-spread header p {font-size:clamp(12px,1.6vw,16px)}
+.diary-page .album-spread header small {color:#476166;font-size:11px}
+.diary-page .filmstrip {grid-auto-columns:clamp(112px,19vw,206px);padding:12px 2px 8px}
+.diary-page .filmstrip button {border:1px solid #f1e1ba;box-shadow:0 1px 3px #1a4b5024;position:relative;aspect-ratio:1/1}
+.diary-page .filmstrip img {height:100%;width:100%;aspect-ratio:auto;object-fit:cover}
+.diary-page .filmstrip span {position:absolute;bottom:0;left:0;right:0;text-align:left;padding:18px 6px 5px;font-size:11px;line-height:1.25;color:white;background:linear-gradient(transparent,#153839bf)}
+.diary-page .album-spread footer {font-size:13px}
+.diary-page .visit-log li {align-items:center;gap:clamp(15px,4vw,35px)}.visit-log time {font:italic 18px Georgia;color:#437884}.visit-log li div {display:grid;justify-items:start}.visit-log li small {font-size:12px;color:#4b6b70}
+.diary-page .collection-empty {margin:16px auto;padding:18px;border-radius:16px}
+@media(max-width:600px){
+ .diary-page .glass-ribbon button {gap:3px;font-size:12px}.diary-page .glass-ribbon button i {display:block;font-size:15px}
+ .diary-page .collection-search input {font-size:16px;padding-inline:4px}.diary-page .collection-search button {padding-inline:9px}
+ .diary-page .diary-arrow {width:32px;height:36px}.diary-page .diary-totals {gap:4px}.diary-page .diary-totals span {padding:0 6px;font-size:11px}
+ .diary-page .diary-themes>div {grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.diary-themes button {min-height:44px}
+ .diary-page .album-spread header {column-gap:4px}.diary-page .album-spread header .jewel-action {font-size:12px;padding:6px 10px}
+ .diary-page .filmstrip {grid-auto-columns:clamp(96px,32vw,165px);gap:6px}
+}
+
+.diary-stays a{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;padding:12px;border-top:1px solid #c5deda}.diary-stays a strong{font:italic 22px Georgia}.diary-stays a span{font-size:13px}
+
+/* Travel Ranking — reference collection layout with real measures and photos. */
+.rank-page{max-width:1010px}
+.rank-page .rank-sections{max-width:none;gap:6px;flex-wrap:nowrap;border:0;box-shadow:none;background:none;padding:0;margin:2px auto 12px}
+.rank-page .rank-sections button,.rank-picker-pair label,#rank-filter-toggle{border:1px solid #f3f7f0;box-shadow:inset 0 0 0 1px #e8d9ae,inset 0 3px 13px #fff,0 3px 9px #40819138;background:linear-gradient(145deg,#ffffffed,#d8f2f1ec 64%,#a8d9deb8);border-radius:100px}
+.rank-page .rank-sections button{font-size:clamp(12px,1.8vw,19px);padding:8px 5px;gap:.38em;color:#104954}
+.rank-page .rank-sections i,.ranking-categories i{display:inline;font-style:normal}
+.rank-page .rank-sections button[aria-pressed=true]{background:linear-gradient(125deg,#a4e0df,#147681 40%,#2c98a3 85%,#b3e5de);color:white;box-shadow:inset 0 0 0 1px #e0bd6d,inset 0 0 10px white,0 2px 8px #34858b45}
+.rank-find,.rank-picker-pair,.rank-more-filters{display:flex;align-items:center;justify-content:center;gap:12px}
+.rank-find{max-width:810px;margin:10px auto}
+.rank-find .collection-search{margin:0;min-width:0;flex:1}
+#rank-filter-toggle{align-self:stretch;min-width:48px;color:#165761;cursor:pointer;font-size:15px;padding:4px 11px}
+#rank-filter-toggle span{display:block;font-size:11px}
+#rank-filter-toggle[aria-expanded=true]{background:#b9e4e4}
+.rank-picker-pair{max-width:670px;margin:12px auto}.rank-picker-pair label{display:flex;align-items:center;padding:0 10px;gap:4px;flex:1;min-width:0;color:#25616c}
+.rank-picker-pair select{width:100%;min-width:0;height:38px;color:#163f4c;background:transparent;border:0;font-size:14px}
+.rank-more-filters{flex-wrap:wrap;margin:8px auto}.rank-more-filters[hidden]{display:none}.rank-more-filters label{display:flex;align-items:center;gap:4px;font-size:12px}.rank-more-filters select{padding:5px 8px;border:1px solid #c8b481;background:#effefd;border-radius:15px;color:#174754;max-width:200px}
+.rank-lead .collection-title{margin-bottom:4px}.rank-lead .rank-scope{font-size:12px}.rank-page #ranking-results{scroll-margin-top:65px}
+.rank-page .podium{gap:clamp(6px,1.8vw,18px);max-width:850px;margin:32px auto 14px;align-items:end;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr) minmax(0,1fr)}
+.rank-page .podium-card,.rank-page .rank-postcard{display:flex;flex-direction:column;text-decoration:none;overflow:visible;padding:0;border:1.5px solid #c9a258;background:linear-gradient(150deg,#edffff,#d2eff1);box-shadow:0 0 0 2px #fff,0 2px 10px #557b754f,inset 0 0 0 2px #fff;border-radius:24% 24% 16px 16px / 15% 15% 16px 16px}
+.rank-page .podium-card{height:clamp(145px,30vw,302px)}
+.rank-page .podium-card.pos-0{height:clamp(161px,32vw,326px)}
+.rank-page .rank-image-link{display:block;position:relative;min-height:0;flex:1;text-decoration:none;border-radius:inherit;overflow:hidden;color:#173d4c}
+.rank-page .rank-image-link img{display:block;width:100%;height:100%;object-fit:cover;border-radius:0}
+.rank-page .rank-ink{position:absolute;inset:auto 0 0;display:flex;flex-direction:column;align-items:center;min-width:0;background:linear-gradient(transparent,#f1ffffec 40%,#e4f7f7);padding:clamp(10px,2.6vw,35px) 3px 4px;line-height:1.18}
+.rank-page .rank-ink strong{font-size:clamp(12px,2.1vw,24px);overflow-wrap:anywhere}
+.rank-page .rank-ink small{font:italic clamp(10px,1.1vw,14px) Georgia,serif;overflow-wrap:anywhere}
+.rank-page .podium-card footer,.rank-page .rank-postcard footer{display:flex;align-items:center;justify-content:center;gap:4px;color:#184d58;min-width:0;min-height:36px;font-weight:600;font-size:clamp(10px,1.6vw,16px);line-height:1.12}
+.rank-page .rank-bookmark{color:#145765;border:none;background:transparent;padding:3px;min-width:32px;min-height:36px;cursor:pointer;font-size:17px}
+.rank-page .rank-bookmark[aria-pressed=true]{color:#11766e}
+.rank-page .podium-card .medal{top:-17px;width:38px;height:38px;font-size:25px;box-shadow:0 0 0 2px #fff;z-index:2;pointer-events:none}
+.rank-page .podium-card .medal:before,.rank-page .podium-card .medal:after{position:absolute;content:'❧';top:10px;font-size:22px;color:#9b7b36}.rank-page .podium-card .medal:before{left:-9px;transform:rotate(-65deg)}.rank-page .podium-card .medal:after{right:-9px;transform:rotate(65deg) scaleX(-1)}
+.rank-page .ranking-categories>div:last-child{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;max-width:860px;margin:auto}
+.rank-page .ranking-categories button{display:flex;flex-direction:column;align-items:stretch;min-width:0;width:100%;aspect-ratio:auto;padding:0;overflow:hidden;background:linear-gradient(145deg,#f6ffff,#d6ecf0);border:1px solid #c7a158;border-radius:45% 45% 14px 14px/46% 46% 14px 14px;box-shadow:0 0 0 2px #f7ffff,0 3px 8px #4b898935}
+.rank-page .ranking-categories img{position:static;display:block;width:100%;height:auto;aspect-ratio:2.75;object-fit:cover;z-index:auto}
+.rank-page .ranking-categories span{position:static;display:block;flex:1;background:linear-gradient(#e3f2f2,#f9ffffe8);font:600 clamp(11px,1.7vw,16px) Georgia,'Yu Mincho',serif;line-height:1.2;padding:2px 2px 6px}
+.rank-page .ranking-categories small{display:block;font:italic clamp(8px,1vw,12px) Georgia}
+.rank-page .rank-continuation{margin-top:18px}.rank-page .rank-continuation header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.rank-page .rank-continuation header h3{margin:0}
+.rank-page #rank-more{margin:0;padding:6px 10px}
+.rank-page .rank-rail{display:flex;align-items:center;gap:6px}
+.rank-page [data-rank-scroll]{display:grid;place-content:center;width:32px;min-width:32px;min-height:38px;background:#f0ffffd9;border:1px solid #b8cfd2;color:#22626c;border-radius:50%;font:23px Georgia;cursor:pointer}
+.rank-page .rank-gallery{min-width:0;flex:1;display:grid;grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:clamp(110px,20vw,180px);gap:10px;overflow-x:auto;scroll-snap-type:x proximity;padding:5px;scrollbar-width:thin}
+.rank-page .rank-postcard{aspect-ratio:.9;scroll-snap-align:start;border-radius:12px;overflow:hidden}
+.rank-page .rank-postcard .rank-ink{inset:auto 0 0;padding-top:12px}.rank-page .rank-postcard .rank-ink strong{font-size:clamp(12px,1.4vw,17px)}
+.rank-page .rank-postcard .medal{top:4px;left:4px;transform:none;width:23px;height:23px;font-size:15px}.rank-page .rank-postcard footer{font-size:12px}
+.rank-page .collection-empty{text-align:center;padding:12px 10px}.rank-page .collection-empty a{display:inline-block;margin:4px}
+@media(max-width:550px){
+ .rank-page .rank-sections{gap:3px;margin-bottom:7px}.rank-page .rank-sections button{flex-direction:column;gap:0;line-height:1.05;padding:5px 2px}.rank-page .rank-sections i{font-size:13px}.rank-page .rank-sections small{font-size:9px;letter-spacing:0;margin-top:2px}
+ .rank-find,.rank-picker-pair{gap:5px;margin:7px auto}.rank-find .collection-search button{padding:6px 10px}.rank-picker-pair select{font-size:13px}
+ .rank-lead .rank-scope{font-size:10px}.rank-page .podium-card .medal{width:29px;height:29px;font-size:19px;top:-15px}.rank-page .podium-card .medal:before,.rank-page .podium-card .medal:after{top:6px;font-size:17px}
+ .rank-page .rank-ink strong{font-size:13px}.rank-page .rank-ink small{font-size:9px}.rank-page .rank-bookmark{min-width:24px;min-height:32px;font-size:15px}
+ .rank-page .ranking-categories>div:last-child{gap:5px}.rank-page .ranking-categories small{font-size:8px}.rank-page .ranking-categories button{border-radius:44% 44% 8px 8px/35% 35% 8px 8px}.rank-page .ranking-categories span{font-size:11px}
+ .rank-page .rank-continuation{padding:9px}.rank-page .rank-continuation h3{font-size:16px}.rank-page [data-rank-scroll]{min-width:23px;width:23px;height:32px;min-height:32px}
+}
