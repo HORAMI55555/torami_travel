@@ -395,3 +395,39 @@ body:is([data-page=diary],[data-page=rankings],[data-page=mytrip]) .site-header{
  .rank-page .ranking-categories>div:last-child{gap:5px}.rank-page .ranking-categories small{font-size:8px}.rank-page .ranking-categories button{border-radius:44% 44% 8px 8px/35% 35% 8px 8px}.rank-page .ranking-categories span{font-size:11px}
  .rank-page .rank-continuation{padding:9px}.rank-page .rank-continuation h3{font-size:16px}.rank-page [data-rank-scroll]{min-width:23px;width:23px;height:32px;min-height:32px}
 }
+@media screen and (min-width:851px){
+ body:is([data-page="mytrip"],[data-page="diary"]) .collection-hero{width:100%;max-width:none}
+ body:is([data-page="mytrip"],[data-page="diary"]) .header-inner{width:100%;max-width:none;padding-inline:clamp(20px,3vw,60px)}
+}
+@media screen and (max-width:850px),screen and (hover:none) and (pointer:coarse){
+ body[data-page="home"] #app>.mobile-backdrop{top:calc(-82px - env(safe-area-inset-top,0px));bottom:auto;height:calc(100vh + 132px);height:calc(100lvh + 132px + env(safe-area-inset-top,0px) + env(safe-area-inset-bottom,0px))}
+}
+.album-gallery-page{max-width:1000px;padding:clamp(14px,2.4vw,32px) clamp(12px,3vw,35px) 35px}
+.album-filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 auto clamp(16px,2.5vw,30px)}
+.album-filters label{flex:1 1 155px;min-width:0}.album-filters input,.album-filters select{font:inherit;color:#214f5b;border:1px solid #b6c8bc;border-radius:24px;background:#f6ffffed;min-height:42px;max-width:100%;padding:7px 14px}
+.album-filters input{width:100%}.album-filters select{cursor:pointer}
+.album-shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,2.5vw,26px);align-items:start}
+.album-print{position:relative;overflow:hidden;border:1px solid #c6aa75;border-radius:90px 90px 15px 15px;background:linear-gradient(145deg,#fffffff7,#e9f8f3f5);box-shadow:0 2px 0 2px #ffffffe6,0 9px 25px #153c4a21}
+.album-open,.album-peeks button,.saved-item{display:block;padding:0;width:100%;border:0;background:transparent;text-align:start;color:#183e48;cursor:pointer}
+.album-window{display:block;position:relative;width:100%;aspect-ratio:1.42;overflow:hidden}.album-window>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 60%;transition:transform .25s}
+.album-count{position:absolute;left:14px;bottom:10px;border:1px solid #ffffff8a;border-radius:15px;background:#16343dc9;color:#fff;padding:2px 10px;font:600 11px/1.6 var(--sans)}
+.album-caption{display:grid;gap:5px;padding:clamp(10px,2vw,23px);padding-bottom:10px}.album-caption small,.saved-item small{color:#526e70;font:600 10px/1.6 var(--sans);letter-spacing:.10em;text-transform:uppercase}.album-caption strong{font:italic clamp(25px,4vw,46px)/1.02 Georgia,serif}.album-caption>span{font:500 clamp(12px,1.5vw,16px)/1.6 var(--sans)}
+.album-peeks{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 13px 13px}.album-peeks button{overflow:hidden;border-radius:7px}.album-peeks img{width:100%;aspect-ratio:2.4;object-fit:cover;display:block}
+.media-heart{display:inline-grid;place-items:center;min-width:42px;min-height:42px;border:1px solid #c3a16a;border-radius:50%;background:#fffffff2;color:#1d5362;cursor:pointer;padding:0;font:25px/1 Georgia,serif}
+.media-heart[aria-pressed=true]{color:#8e3161;background:#fff3f7}.album-print>.media-heart,.saved-tile>.media-heart{position:absolute;right:12px;bottom:auto;top:18px;box-shadow:0 1px 7px #14374c24}
+.album-print>.media-heart{top:auto;bottom:12px;right:12px}
+.album-print .album-peeks{padding-right:63px}
+.album-print:not(:has(.album-peeks)) .album-caption{padding-right:60px}
+.lightbox-save{display:flex;align-items:center;justify-content:center;gap:8px;color:#284e56;font-size:13px}.lightbox-save a{margin-left:10px;color:#1c606b}
+.trip-tabs.glass-ribbon{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:760px;margin:12px auto 18px}
+.trip-tabs button{min-width:0;min-height:48px;justify-content:center}
+.travel-stamps,.planner-wishes{margin:18px auto;padding:14px 18px;max-width:850px}.travel-stamps summary,.planner-wishes summary{cursor:pointer;color:#244d59;font:500 17px/1.65 var(--sans)}.travel-stamps b,.saved-group small{color:#576e71;font-size:13px}
+.saved-group,.saved-empty{padding:12px clamp(8px,2vw,24px)}.saved-empty{text-align:center;max-width:600px;margin:15px auto}
+.saved-group h3{font:500 22px Georgia,serif;color:#285464;margin:16px 0 10px}
+.save-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(155px,46%),1fr));gap:12px}
+.saved-tile{position:relative;max-width:275px;overflow:hidden;border-radius:16px;border:1px solid #bfa16b;background:#f3fffc}.saved-item{height:100%;text-decoration:none}.saved-item img{display:block;width:100%;aspect-ratio:1.4;object-fit:cover}.saved-item>span{display:grid;gap:2px;padding:10px 12px}.saved-item strong{line-height:1.45;font-size:14px}
+.saved-tile>.media-heart{right:5px;top:5px}.saved-collection{max-width:970px;margin:auto}
+.guide-paper .note-title{font:500 clamp(20px,3vw,31px)/1.5 var(--serif,Georgia);color:#18606b;margin:.65em 0 .35em}
+.guide-paper .note-copy{max-width:55em;line-height:1.95}.guide-paper .personal-scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:6px}.personal-scores>div{border-radius:10px;background:#f5fbf7;border:1px solid #d1ded7;padding:8px 9px}
+@media(max-width:560px){.album-print{border-radius:38px 38px 12px 12px}.album-filters{display:grid;grid-template-columns:1fr 1fr}.album-filters label{grid-column:1/-1}.album-filters input,.album-filters select{width:100%;font-size:14px}.album-window{aspect-ratio:1}.album-caption strong{font-size:clamp(22px,6.3vw,31px)}.album-caption small{font-size:9px;letter-spacing:.035em}.album-peeks{padding:0 9px 10px}.album-print .album-peeks{padding-right:9px}.album-print>.media-heart{bottom:auto;top:8px;right:8px}.album-peeks img{aspect-ratio:1.65}.album-print:not(:has(.album-peeks)) .album-caption{padding-right:10px}.trip-tabs.glass-ribbon{margin:9px auto}.trip-tabs button{font-size:14px}.trip-tabs small{font-size:10px}}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.album-open:hover img{transform:scale(1.035)}}
